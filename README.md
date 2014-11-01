@@ -3,6 +3,10 @@ IEPD-Java-Bindings
 
 This is a Java project that uses Maven and JAXB to generate a jar of java class files based on an IEPD that can be used to read and generate instances.
 
+To build this project:
+`$ mvn clean install`
+
+The IEPD is unzipped at: `src/main/xsd`, and building the project is a target `target/JAXB-Template-0.1-SNAPSHOT.jar`
 
 This project is based on the Template IEPD project here: https://github.com/niem/Template-IEPD
 
@@ -11,7 +15,7 @@ This project is based on the Template IEPD project here: https://github.com/niem
 2. use those generated sources in compiling the whole project
 3. Runs tests that generate an instance and read in an instance.
 
-Future capabilities:
+### Future capabilities
 1. Update namespace instance generation 
 2. Test a round trip read and write
 3. Use a JAXB config file for more complicated schema issues
