@@ -3,6 +3,8 @@ IEPD-Java-Bindings
 
 This is a Java project that uses Maven and JAXB to generate a jar of java class files based on an IEPD that can be used to read and generate instances.
 
+[![Build Status](https://travis-ci.org/jtmrice/IEPD-Java-Bindings.svg?branch=master)](https://travis-ci.org/jtmrice/IEPD-Java-Bindings)
+
 To build this project:
 `$ mvn clean install`
 
