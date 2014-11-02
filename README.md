@@ -6,7 +6,7 @@ This is a Java project that uses Maven and JAXB to generate a jar of java class 
 To build this project:
 `$ mvn clean install`
 
-The IEPD is unzipped at: `src/main/xsd`, and building the project is a target `target/JAXB-Template-0.1-SNAPSHOT.jar`
+The IEPD is unzipped at: `src/main/xsd` and after building the project the jar is available here: `target/JAXB-Template-0.1-SNAPSHOT.jar`. The generated source files are put here: `target/generated-sources/jaxb` and the used in the compilation. For Testing there is a sample instance here `src/test/resources/sample-exchange.xml` and after running tests a generated instance at `target/instance.xml`.
 
 This project is based on the Template IEPD project here: https://github.com/niem/Template-IEPD
 
