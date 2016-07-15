@@ -17,9 +17,9 @@ This project is based on the Template IEPD project here: https://github.com/niem
 2. use those generated sources in compiling the whole project
 3. Runs tests that generate an instance and read in an instance.
 4. Update namespace instance generation
+5. Test a round trip read and write
 
 ### Future capabilities
-# Test a round trip read and write
 # Use a JAXB config file for more complicated schema issues
 # Setup unpacking IEPD from zip or URL, so you don't have to copy schema files in
 # Create some generic web services that can be generated from an IEPD (possibly another project)
