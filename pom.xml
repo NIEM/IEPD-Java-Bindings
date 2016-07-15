@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/
-2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.example.niem.iepd</groupId>
   <artifactId>JAXB-Template</artifactId>
@@ -17,6 +16,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.5.1</version>
           <configuration>
             <source>1.7</source>
             <target>1.7</target>
@@ -30,7 +30,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>jaxb2-maven-plugin</artifactId>
-        <version>1.6</version>
+        <version>2.2</version>
         <executions>
           <execution>
             <id>xjc</id>
@@ -40,37 +40,25 @@
           </execution>
         </executions>
         <configuration>
-          <!-- THE NAME OF YOUR GENERATED SOURCE PACKAGE -->
-          <packageName>com.example.niem.iepd</packageName> 
-          <schemaFiles>extension/TemplateExtension.xsd</schemaFiles>
+          <!-- Package name of the generated sources. -->
+          <packageName>com.example.niem.iepd</packageName>
+          <noPackageLevelAnnotations>true</noPackageLevelAnnotations>
+          <sources>
+            <source>src/main/xsd/extension/TemplateExtension.xsd</source>
+          </sources>
           <catalog>src/main/xsd/xml-catalog.xml</catalog>
         </configuration>
       </plugin>
-      <plugin>
-    <!-- We use this plugin to ensure that our usage of the
-    maven-jaxb2-plugin is JDK 8 compatible in absence of a fix
-    for https://java.net/jira/browse/MAVEN_JAXB2_PLUGIN-80. -->
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>properties-maven-plugin</artifactId>
-        <version>1.0-alpha-2</version>
-        <executions>
-          <execution>
-            <id>set-additional-system-properties</id>
-            <goals>
-                <goal>set-system-properties</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <properties>
-            <property>
-                <name>javax.xml.accessExternalSchema</name>
-                <value>file,http</value>
-            </property>
-          </properties>
-        </configuration>
-      </plugin>
     </plugins>
+
+    <resources>
+      <resource>
+        <directory>src/main/resources/jaxb</directory>
+        <targetPath>${build.directory}/generated-sources/jaxb</targetPath>
+        <filtering>false</filtering>
+      </resource>
+    </resources>
+
   </build>
 
   <dependencies>

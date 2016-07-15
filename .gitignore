@@ -4,6 +4,13 @@ pom.xml.releaseBackup
 pom.xml.versionsBackup
 pom.xml.next
 release.properties
-
 *~
 *.class
+
+# IDE specific
+.idea
+*.iws
+*.iml
+
+# OS specific
+*.DS_Store
