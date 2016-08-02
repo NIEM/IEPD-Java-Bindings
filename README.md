@@ -17,7 +17,7 @@ This project is based on the Template IEPD project here: `https://github.com/nie
 This is a beta release with known issues that limit its current capabilities:
 * Cannot work with GML - far too many issues than we can resolve right now.
 * Cannot randomly generate references (i.e., structures:ref and structures:id) that make logical sense yet.
-* Cannot randomly generate with augmentation points or abstract elements, these could be added .
+* Cannot randomly generate with augmentation points or abstract elements, these could be added in the `xml-randomizer` module.
 
 
 ### Current Features
@@ -42,7 +42,7 @@ This is a beta release with known issues that limit its current capabilities:
 ### Future capabilities
 * Setup unpacking IEPD from ZIP or URL, so you do not have to copy schema document files in.
 * Create some generic Web services that can be generated from an IEPD (possibly another project).
-* Update Random data generator to handle NIEM/XML specific cases
+* Update Random data generator to handle NIEM/XML specific cases.
 * Setup randomly generated dates to use reasonable values.
 
 
