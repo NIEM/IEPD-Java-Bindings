@@ -1,0 +1,110 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.example.niem.iepd</groupId>
+  <artifactId>JAXB-Template</artifactId>
+  <version>0.2-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>JAXB Bindings Template Example</name>
+  <description>
+    Sample Java Bindings project with JAXB using simple testing. Replace with real information for an IEPD.
+  </description>
+
+  <parent>
+    <groupId>org.gtri.niem</groupId>
+    <artifactId>java-bindings-reactor</artifactId>
+    <version>0.2-SNAPSHOT</version>
+  </parent>
+
+  <properties>
+    <jaxbConfig.packageName>com.example.niem.iepd</jaxbConfig.packageName>
+    <jaxbConfig.schemaPath>src/main/xsd</jaxbConfig.schemaPath>
+  </properties>
+
+  <build>
+    <plugins>
+      <!-- using jaxb plugin to generate java classes from xsd files -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jaxb2-maven-plugin</artifactId>
+        <version>2.2</version>
+        <executions>
+          <execution>
+            <id>xjc</id>
+            <goals>
+              <goal>xjc</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <verbose>true</verbose>
+          <noPackageLevelAnnotations>true</noPackageLevelAnnotations>
+          <sources>
+            <source>src/main/xsd/exchange/TemplateExchange.xsd</source>
+          </sources>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.gtri</groupId>
+        <artifactId>jaxb-config-maven-plugin</artifactId>
+        <version>0.2-SNAPSHOT</version>
+        <executions>
+          <execution>
+            <id>Build JAXB Config</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>jaxbGenerateConfig</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+
+    <resources>
+      <resource>
+        <directory>src/main/resources/jaxb</directory>
+        <targetPath>${build.directory}/generated-sources/jaxb</targetPath>
+        <filtering>false</filtering>
+      </resource>
+    </resources>
+
+  </build>
+
+  <dependencies>
+    <!-- JAXB should be included in the standard Java distribution -->
+
+    <!-- Test Dependencies -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest-all -->
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-all</artifactId>
+      <version>1.3</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/io.github.benas/random-beans -->
+    <dependency>
+      <groupId>io.github.benas</groupId>
+      <artifactId>random-beans</artifactId>
+      <version>3.2.0</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.gtri</groupId>
+      <artifactId>xml-randomizer</artifactId>
+      <version>0.2-SNAPSHOT</version>
+    </dependency>
+
+  </dependencies>
+
+</project>

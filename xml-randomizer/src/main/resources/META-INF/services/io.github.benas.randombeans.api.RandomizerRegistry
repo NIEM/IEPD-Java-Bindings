@@ -1,0 +1,3 @@
+# XmlRandomizerRegistry as an registry for generating xml data, starting with XMLGregorianDate
+
+org.gtri.xmlRandomizer.XmlRandomizerRegistry
