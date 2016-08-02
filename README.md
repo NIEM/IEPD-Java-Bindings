@@ -10,7 +10,7 @@ To build this project:
 
 The IEPD is unzipped into: `java-bindings/src/main/xsd` and after building the project the jar is available here: `java-bindings/target/JAXB-Template-0.2-SNAPSHOT.jar`. The generated source files are put here: `target/generated-sources/jaxb` and the used in the compilation. For testing there is a sample instance here `java-bindings/src/test/resources/sample-exchange.xml` and after running tests a generated instance at `java-bindings/target/testInstanceRandom.xml`.
 
-This project is based on the Template IEPD project here: `https://github.com/niem/Template-IEPD`
+This project is based on the Template IEPD project here: [Template IEPD](https://github.com/niem/Template-IEPD)
 
 
 ### Note
