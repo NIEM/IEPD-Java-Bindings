@@ -20,6 +20,7 @@
   <properties>
     <jaxbConfig.packageName>com.example.niem.iepd</jaxbConfig.packageName>
     <jaxbConfig.schemaPath>src/main/xsd</jaxbConfig.schemaPath>
+    <jaxbConfig.rootSchema>src/main/xsd/exchange/TemplateExchange.xsd</jaxbConfig.rootSchema>
   </properties>
 
   <build>
@@ -41,7 +42,7 @@
           <verbose>true</verbose>
           <noPackageLevelAnnotations>true</noPackageLevelAnnotations>
           <sources>
-            <source>src/main/xsd/exchange/TemplateExchange.xsd</source>
+            <source>${jaxbConfig.rootSchema}</source>
           </sources>
         </configuration>
       </plugin>

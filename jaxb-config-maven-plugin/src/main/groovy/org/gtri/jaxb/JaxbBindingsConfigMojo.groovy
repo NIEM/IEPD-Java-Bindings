@@ -18,6 +18,9 @@ class JaxbBindingsConfigMojo extends AbstractMojo {
     @Parameter(property = "jaxbConfig.packageName", defaultValue = "com.example.niem.iepd")
     private String packageName
 
+    @Parameter(property = "jaxbConfig.rootSchema", defaultValue = "src/main/xsd/exchange/TemplateExchange.xsd")
+    private String rootSchema
+
     void execute() {
         getLog().info( "Generate XML package-info.java to specify namesapce prefixes and jaxb bindings file to generate java bindings" )
         getLog().info("Searching for schemas in: $basedir/$schemaPath")
@@ -26,6 +29,6 @@ class JaxbBindingsConfigMojo extends AbstractMojo {
         namespaceScanner.scanForNamespaces("$basedir/$schemaPath")
 
         JaxbNamespaceMappingGenerator.writeJavaPackageInfo("$basedir/src/main/java/${packageName.replace('.','/')}/package-info.java",packageName,"http://example.com/template/1.0/",namespaceScanner.namespaceMap)
-        JaxbBindingsGenerator.writeJaxbBindings("$basedir/src/main/xjb/generated-bindings.xjb",packageName,basedir,namespaceScanner.schemaLocation)
+        JaxbBindingsGenerator.writeJaxbBindings("$basedir/src/main/xjb/generated-bindings.xjb",rootSchema,packageName,basedir,namespaceScanner.schemaLocation)
     }
 }
