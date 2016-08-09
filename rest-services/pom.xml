@@ -2,10 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.gtri</groupId>
     <artifactId>rest-services</artifactId>
-    <version>0.2-SNAPSHOT</version>
-    <packaging>jar</packaging>
 
     <name>Example REST Services using Jaxb and custom IEPD</name>
     <description></description>
@@ -44,15 +41,15 @@
         </dependency>
 
         <dependency>
-            <groupId>org.gtri</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>xml-randomizer</artifactId>
-            <version>0.2-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.example.niem.iepd</groupId>
-            <artifactId>JAXB-Template</artifactId>
-            <version>0.2-SNAPSHOT</version>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jaxb-bindings</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- Test Dependencies -->

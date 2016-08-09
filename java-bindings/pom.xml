@@ -1,14 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.example.niem.iepd</groupId>
-  <artifactId>JAXB-Template</artifactId>
-  <version>0.2-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <artifactId>jaxb-bindings</artifactId>
 
-  <name>JAXB Bindings Template Example</name>
+  <name>JAXB Bindings</name>
   <description>
-    Sample Java Bindings project with JAXB using simple testing. Replace with real information for an IEPD.
+    This project is responsible for running JAXB to generate the Java classes which will work with your IEPD.  It will
+    also run XML Files end-to-end as tests, which are found in the IEPD.
   </description>
 
   <parent>
@@ -16,12 +14,6 @@
     <artifactId>java-bindings-reactor</artifactId>
     <version>0.2-SNAPSHOT</version>
   </parent>
-
-  <properties>
-    <jaxbConfig.packageName>com.example.niem.iepd</jaxbConfig.packageName>
-    <jaxbConfig.schemaPath>src/main/xsd</jaxbConfig.schemaPath>
-    <jaxbConfig.rootSchema>src/main/xsd/exchange/TemplateExchange.xsd</jaxbConfig.rootSchema>
-  </properties>
 
   <build>
     <plugins>
@@ -42,25 +34,12 @@
           <verbose>true</verbose>
           <noPackageLevelAnnotations>true</noPackageLevelAnnotations>
           <sources>
-            <source>${jaxbConfig.rootSchema}</source>
+            <!-- Note: This directory is created by the prepare-iepd project, see that project for details -->
+            <source>src/main/xsd</source>
           </sources>
         </configuration>
       </plugin>
 
-      <plugin>
-        <groupId>org.gtri</groupId>
-        <artifactId>jaxb-config-maven-plugin</artifactId>
-        <version>0.2-SNAPSHOT</version>
-        <executions>
-          <execution>
-            <id>Build JAXB Config</id>
-            <phase>initialize</phase>
-            <goals>
-              <goal>jaxbGenerateConfig</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
 
     <resources>

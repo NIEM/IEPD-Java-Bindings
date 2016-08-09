@@ -37,6 +37,7 @@
   <modules>
     <module>jaxb-config-maven-plugin</module>
     <module>xml-randomizer</module>
+    <module>prepare-iepd</module>
     <module>java-bindings</module>
     <module>rest-services</module>
   </modules>

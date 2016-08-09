@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>prepare-iepd</artifactId>
+
+    <name>Prepare IEPD Project</name>
+    <description>
+        This project will find the specified IEPD source directory and process it, making it ready for use with JAXB.
+        Note that this project has 1 main goal - to modify the contents of the java-bindings project.  It can also be
+        used to "clean" that project so that it has no evidence of your IEPD in it.
+    </description>
+
+    <properties>
+
+        <!-- TODO: Modify this value if you wish to use a different IEPD source directory, other than the default -->
+        <iepd.source.dir>../iepd-source</iepd.source.dir>
+
+        <!-- FIXME: Remove these -->
+        <jaxbConfig.packageName>com.example.niem.iepd</jaxbConfig.packageName>
+        <jaxbConfig.schemaPath>src/main/xsd</jaxbConfig.schemaPath>
+        <jaxbConfig.rootSchema>src/main/xsd/exchange/TemplateExchange.xsd</jaxbConfig.rootSchema>
+    </properties>
+
+    <parent>
+        <groupId>org.gtri.niem</groupId>
+        <artifactId>java-bindings-reactor</artifactId>
+        <version>0.2-SNAPSHOT</version>
+    </parent>
+
+    <dependencies>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>org.gtri</groupId>
+                <artifactId>jaxb-config-maven-plugin</artifactId>
+                <version>0.2-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <id>Build JAXB Config</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>jaxbGenerateConfig</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+</project>
