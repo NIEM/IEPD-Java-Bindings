@@ -14,8 +14,8 @@ To build this project:
 
 ### Usage
 * Update schema files with IEPD schemas here: `${basedir}/iepd-source/`
-** Note that schemas go in the "./xsd" directory.  ALL schema files from this directory will be used by this project.
-** Note that instance XML files go in the "./xml" directory.  Each XML file found in here will be used as the basis for a round trip test later on.
+  * Note that schemas go in the "./xsd" directory.  ALL schema files from this directory will be used by this project.
+  * Note that instance XML files go in the "./xml" directory.  Each XML file found in here will be used as the basis for a round trip test later on.
 * Run the command `$ mvn clean install`
 * Your jar file for use will be placed in the ${basedir} directory, named 'java-bindings.jar'
 
