@@ -2,25 +2,41 @@ IEPD-Java-Bindings
 ==================
 
 This is a Java project that uses Maven and JAXB to generate a jar of Java class files based on an IEPD that can be used to read and generate instances.
+This project is meant to be an **example** of how one may go about creating a JAXB-based project for using Java to manipulate
+a NIEM based exchange.  While we have attempted to accommodate all sorts of NIEM-based schema idioms, it is very possible
+that some conventions don't translate properly to Java objects the way you intend.  Please provide feedback to us and we will
+attempt to create your scenario in our test IEPD in this project and update how our JAXB bindings are generated.
 
 [![Build Status](https://travis-ci.org/jtmrice/IEPD-Java-Bindings.svg?branch=master)](https://travis-ci.org/jtmrice/IEPD-Java-Bindings)
 
 To build this project:
 `$ mvn clean install`
 
-The IEPD is unzipped into: `java-bindings/src/main/xsd` and after building the project the jar is available here: `java-bindings/target/JAXB-Template-0.2-SNAPSHOT.jar`. The generated source files are put here: `target/generated-sources/jaxb` and the used in the compilation. For testing there is a sample instance here `java-bindings/src/test/resources/sample-exchange.xml` and after running tests a generated instance at `java-bindings/target/testInstanceRandom.xml`.
+### Usage
+* Update schema files with IEPD schemas here: `${basedir}/iepd-source/`
+** Note that schemas go in the "./xsd" directory.  ALL schema files from this directory will be used by this project.
+** Note that instance XML files go in the "./xml" directory.  Each XML file found in here will be used as the basis for a round trip test later on.
+* Run the command `$ mvn clean install`
+* Your jar file for use will be placed in the ${basedir} directory, named 'java-bindings.jar'
 
-This project is based on the Template IEPD project here: [Template IEPD](https://github.com/niem/Template-IEPD)
+The IEPD is unzipped into: `java-bindings/src/main/xsd` and after building the project the jar is available here: `java-bindings/target/JAXB-Template-0.2-SNAPSHOT.jar`.
+The generated source files are put here: `target/generated-sources/jaxb` and the used in the compilation. For testing
+there is a sample instance here `java-bindings/src/test/resources/sample-exchange.xml` and after running tests a
+generated instance at `java-bindings/target/testInstanceRandom.xml`.
+
+This project is based on the Template IEPD project here: [Template IEPD](https://github.com/niem/Template-IEPD).  Note that
+the project has been modified (potentially substantially) to include fringe error cases that exist with JAXB and NIEM, to
+illustrate and provide tests for this project.
 
 
 ### Note
-This is a beta release with known issues that limit its current capabilities:
-* Cannot work with GML - far too many issues than we can resolve right now.
-* Cannot randomly generate references (i.e., structures:ref and structures:id) that make logical sense yet.
-* Cannot randomly generate with augmentation points or abstract elements, these could be added in the `xml-randomizer` module.
+This is a **beta** release with known issues that limit its current capabilities:
+* Cannot work with GML
+* Has trouble randomly generating references (i.e., structures:ref and structures:id)
+* Cannot randomly generate with augmentation points or abstract elements
 
 
-### Current Features
+### Features
 1. Generates Java class files from a simple IEPD with JAXB.
 2. Uses those generated sources in compiling the whole project.
 3. Runs tests that generate an instance and read in an instance.
@@ -32,27 +48,10 @@ This is a beta release with known issues that limit its current capabilities:
 9. Has Maven plugin to create `package-info.java` and JAXB bindings file customized from the schema documents.
 
 
-### Usage
-* Update schema files with IEPD schemas here: `java-bindings/src/main/xsd`
-* Update `java-bindings/pom.xml` to reference new IEPD schemas
-* Update tests in `java-bindings` to use new IEPD objects
-* Update tests in `rest-services` to use new IEPD objects
 
 
-### Future capabilities
-* Setup unpacking IEPD from ZIP or URL, so you do not have to copy schema document files in.
+### Planned Future Capabilities
 * Create some generic Web services that can be generated from an IEPD (possibly another project).
 * Update Random data generator to handle NIEM/XML specific cases.
 * Setup randomly generated dates to use reasonable values.
 
-
-### Project structure
-* This project is a Maven reactor project with submodules.
-  * `java-bindings` - generated Java source files and jar with sample tests of static and randomly generated exchanges.
-  * `jaxb-config-maven-plugin` - Maven plugin to generate `package-info.java` and `generated-bindings.xjb` for generating bindings.
-  * `xml-randomizer` - Adds random `XMLGregorianCalender` to random data generation library.
-  * `rest-services` - Sample REST services to send and receive exchanges based on the IEPD.
-
-
-
-TEST COMMENT
