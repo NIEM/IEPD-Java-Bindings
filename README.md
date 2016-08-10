@@ -3,9 +3,8 @@ IEPD-Java-Bindings
 
 This is a Java project that uses Maven and JAXB to generate a jar of Java class files based on an IEPD that can be used to read and generate instances.
 This project is meant to be an **example** of how one may go about creating a JAXB-based project for using Java to manipulate
-a NIEM based exchange.  While we have attempted to accommodate all sorts of NIEM-based schema idioms, it is very possible
-that some conventions don't translate properly to Java objects the way you intend.  Please provide feedback to us and we will
-attempt to create your scenario in our test IEPD in this project and update how our JAXB bindings are generated.
+a NIEM based exchange.  While we have attempted to accommodate all sorts of NIEM-based schema idioms, please understand that
+not all schema models will translate into perfect Java beans.
 
 [![Build Status](https://travis-ci.org/jtmrice/IEPD-Java-Bindings.svg?branch=master)](https://travis-ci.org/jtmrice/IEPD-Java-Bindings)
 
@@ -29,7 +28,6 @@ This is a **beta** release with known issues that limit its current capabilities
 * Has trouble randomly generating references (i.e., structures:ref and structures:id)
 * Cannot randomly generate with augmentation points or abstract elements
 
-
 ### Features
 1. Generates Java class files from a simple IEPD with JAXB.
 2. Uses those generated sources in compiling the whole project.
@@ -42,10 +40,13 @@ This is a **beta** release with known issues that limit its current capabilities
 9. Has Maven plugin to create `package-info.java` and JAXB bindings file customized from the schema documents.
 
 
-
-
 ### Planned Future Capabilities
 * Create some generic Web services that can be generated from an IEPD (possibly another project).
 * Update Random data generator to handle NIEM/XML specific cases.
 * Setup randomly generated dates to use reasonable values.
 
+
+### Giving Feedback
+XML Schemas have many different complexities that JAXB does not like.  As a result, some schemas won't translate properly
+to Java objects the way you intend.  Please provide feedback to us and we will attempt to create your scenario in our
+test IEPD in this project and update how our JAXB bindings are generated.
