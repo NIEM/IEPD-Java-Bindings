@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<!--
+  This file provides the JAXB compiler with information used to build a "package-info.java" file, useful for telling
+  JAXB how to write your schemas out with appropriate namespace prefixes (instead of "ns1", "ns2", etc).  If you don't
+  specify any values here, then the plugin will read them from the XSD files in this IEPD.
+-->
+<namespacePrefixMappings>
+
+    <mapping prefix="nc" uri="http://release.niem.gov/niem/niem-core/3.0/" />
+    <mapping prefix="appinfo" uri="http://release.niem.gov/niem/appinfo/3.0/" />
+    <mapping prefix="template" uri="http://example.com/template/1.0/" />
+
+
+</namespacePrefixMappings>

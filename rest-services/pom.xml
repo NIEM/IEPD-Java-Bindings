@@ -10,7 +10,7 @@
     <parent>
         <groupId>org.gtri.niem</groupId>
         <artifactId>java-bindings-reactor</artifactId>
-        <version>0.2-SNAPSHOT</version>
+        <version>0.3-SNAPSHOT</version>
     </parent>
 
     <dependencies>

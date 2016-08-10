@@ -12,7 +12,7 @@
   <parent>
     <groupId>org.gtri.niem</groupId>
     <artifactId>java-bindings-reactor</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.3-SNAPSHOT</version>
   </parent>
 
   <build>
@@ -33,6 +33,7 @@
         <configuration>
           <verbose>true</verbose>
           <noPackageLevelAnnotations>true</noPackageLevelAnnotations>
+          <clearOutputDir>true</clearOutputDir>
           <sources>
             <!-- Note: This directory is created by the prepare-iepd project, see that project for details -->
             <source>src/main/xsd</source>
@@ -47,6 +48,9 @@
         <directory>src/main/resources/jaxb</directory>
         <targetPath>${build.directory}/generated-sources/jaxb</targetPath>
         <filtering>false</filtering>
+        <includes>
+          <include>**/*</include>
+        </includes>
       </resource>
     </resources>
 
@@ -80,9 +84,9 @@
     </dependency>
 
     <dependency>
-      <groupId>org.gtri</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>xml-randomizer</artifactId>
-      <version>0.2-SNAPSHOT</version>
+      <version>${project.version}</version>
     </dependency>
 
   </dependencies>
