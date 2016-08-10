@@ -9,20 +9,14 @@ attempt to create your scenario in our test IEPD in this project and update how 
 
 [![Build Status](https://travis-ci.org/jtmrice/IEPD-Java-Bindings.svg?branch=master)](https://travis-ci.org/jtmrice/IEPD-Java-Bindings)
 
-To build this project:
-`$ mvn clean install`
-
 ### Usage
 * Update schema files with IEPD schemas here: `${basedir}/iepd-source/`
   * Note that schemas go in the "./xsd" directory.  ALL schema files from this directory will be used by this project.
   * Note that instance XML files go in the "./xml" directory.  Each XML file found in here will be used as the basis for a round trip test later on.
 * Run the command `$ mvn clean install`
-* Your jar file for use will be placed in the ${basedir} directory, named 'java-bindings.jar'
+* Your jar file containgin JAXB Beans will be placed at `${basedir}/java-bindings.jar`
+  * This jar file will contain both sources and compiled class files
 
-The IEPD is unzipped into: `java-bindings/src/main/xsd` and after building the project the jar is available here: `java-bindings/target/JAXB-Template-0.2-SNAPSHOT.jar`.
-The generated source files are put here: `target/generated-sources/jaxb` and the used in the compilation. For testing
-there is a sample instance here `java-bindings/src/test/resources/sample-exchange.xml` and after running tests a
-generated instance at `java-bindings/target/testInstanceRandom.xml`.
 
 This project is based on the Template IEPD project here: [Template IEPD](https://github.com/niem/Template-IEPD).  Note that
 the project has been modified (potentially substantially) to include fringe error cases that exist with JAXB and NIEM, to
