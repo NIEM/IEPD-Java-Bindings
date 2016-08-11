@@ -2,7 +2,9 @@ package org.gtri.jaxb;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.Mojo
-import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.Parameter
+
+import java.nio.file.Files;
 
 
 /**
@@ -12,14 +14,29 @@ import org.apache.maven.plugins.annotations.Parameter;
 @Mojo(name="jaxbGenerateConfig")
 class JaxbBindingsConfigMojo extends AbstractMojo {
 
+    /**
+     * The location of the input IEPD.
+     */
     @Parameter(required = true)
     private String iepdDirPath
 
-    @Parameter(required = true)
-    private String xsdOutputPath
-
+    /**
+     * Used to determine what to do if output already exists that this plugin would need to modify.
+     */
     @Parameter
-    private Boolean overwriteXsdOutput = true;
+    private Boolean overwritePluginOutput = true;
+
+    /**
+     * Where (relative to this project) the prepared files will go, ready to be compiled by XJC.
+     */
+    @Parameter
+    private String outputPath = "../java-bindings/src/main"
+
+    /**
+     * The user can pass additional jaxb binding files this way.
+     */
+    @Parameter
+    private String[] jaxbBindingFiles = null
 
     @Parameter(property = "basedir", required = true)
     private File basedir
@@ -31,11 +48,106 @@ class JaxbBindingsConfigMojo extends AbstractMojo {
         getLog().debug("Parsing the IEPD directory...");
         IEPDDirectory iepd = new IEPDDirectory(new File(this.basedir, this.iepdDirPath));
 
+        // TODO - Right now we simply copy the schemas.  In the future, we may translate them first.
+        copyOverSchemaFiles(iepd);
+
+        writePackageInfoJavas(iepd);
+        writeJaxbBindingsFile(iepd);
+
 //        JaxbPackageInfoGenerator packageInfoGenerator = new JaxbPackageInfoGenerator(iepd.getUriPrefixMapping());
 //        String packageInfoFileContents = packageInfoGenerator.getFileContents();
 
 //        JaxbPackageInfoGenerator.writeJavaPackageInfo("$basedir/src/main/java/${packageName.replace('.','/')}/package-info.java",packageName,"http://example.com/template/1.0/",namespaceScanner.namespaceMap)
 //        JaxbBindingsGenerator.writeJaxbBindings("$basedir/src/main/xjb/generated-bindings.xjb",rootSchema,packageName,basedir,namespaceScanner.schemaLocation)
+    }
+
+    /**
+     * Responsible for creating the output directores for this IEPD.  This is based on the packages determined by the
+     * schemas (each one will need a package-info.java file).
+     * <br/><br/>
+     * @param iepd
+     */
+    void writePackageInfoJavas(IEPDDirectory iepd) {
+        getLog().debug("Writing Package Infos...");
+
+        List<String> packageNames = iepd.getUniquePackages();
+        if( packageNames && !packageNames.isEmpty() ){
+            for( String packageName : packageNames ){
+                String uri = iepd.getUriForPackageName(packageName);
+                File baseDir = getJavaDir();
+                String packageSubPath = packageName.replace(".", File.separator);
+                File packageDir = new File(baseDir, packageSubPath);
+                if( !packageDir.exists() ){
+                    packageDir.mkdirs();
+                }
+                File packageInfoJavaFile = new File(packageDir, "package-info.java");
+                if( !packageInfoJavaFile.exists() ){
+                    JaxbPackageInfoGenerator.writePackageInfo(packageInfoJavaFile, packageName, uri, iepd.getUriPrefixMapping());
+                }
+
+            }
+        }else{
+            getLog().error("This IEPD does not define any packages!  Cannot create any package info files.")
+        }
+    }// end writePackageInfoJavas
+
+    /**
+     * Performs a simple copy of all the XSD files in the IEPD to the $outputDir/xsd directory.
+     */
+    void copyOverSchemaFiles(IEPDDirectory iepd){
+        getLog().debug("Copying schema files...");
+        File xsdDir = getXsdDir();
+        for( SchemaInfo schemaInfo : iepd.schemas ){
+            File schemaFile = schemaInfo.file;
+            String relativePath = schemaFile.canonicalPath.replace(iepd.getBase().canonicalPath + File.separator + "xsd", ".");
+            File outputFile = new File(xsdDir, relativePath);
+            if( !outputFile.getParentFile().exists() ){
+                outputFile.getParentFile().mkdirs();
+            }
+            getLog().info("Copying file[${schemaFile.canonicalPath}] to [${outputFile.canonicalPath}]...")
+            Files.copy(schemaFile.canonicalFile.toPath(), outputFile.canonicalFile.toPath());
+        }
+
+    }//end copyOverSchemaFiles
+
+    /**
+     * Creates the NIEM JAXB Bindings File based on the information in this IEPD.
+     */
+    void writeJaxbBindingsFile(IEPDDirectory iepd){
+        getLog().debug("Creating JAXB Bindings file(s)...");
+        File jaxbOutDir = getJaxbDir();
+        copyOverJaxbFiles(iepd, jaxbOutDir);
+
+        File jaxbOutputFile = new File(jaxbOutDir, "generated-bindings.jaxb");
+        JaxbBindingsGenerator.writeJaxbBindings(jaxbOutputFile, iepd);
+    }//end writeJaxbBindingsFile()
+
+    /**
+     * Performs a copy operation for any values found in the jaxbBindingFiles array above.
+     */
+    void copyOverJaxbFiles(IEPDDirectory iepd, File jaxbOutDir) {
+        if( this.jaxbBindingFiles != null && this.jaxbBindingFiles.length > 0 ){
+            for( String jaxbFilePath : this.jaxbBindingFiles ){
+                File jaxbFile = new File(this.basedir, jaxbFilePath);
+                if( jaxbFile.exists() ){
+                    File outputFile = new File(jaxbOutDir, jaxbFile.name);
+                    getLog().info("Copying file[${jaxbFile.canonicalPath}] to [${outputFile.canonicalPath}]...")
+                    Files.copy(jaxbFile.canonicalFile.toPath(), outputFile.canonicalFile.toPath());
+                }
+            }
+        }else{
+            getLog().info("Found no additional jaxb files specified by <jaxbBindingFiles>, not copying over any.")
+        }
+    }//end copyOverJaxbFiles()
+
+    File getJavaDir(){
+        return new File(new File(this.basedir, this.outputPath), "java");
+    }
+    File getXsdDir(){
+        return new File(new File(this.basedir, this.outputPath), "xsd");
+    }
+    File getJaxbDir(){
+        return new File(new File(this.basedir, this.outputPath), "jaxb");
     }
 
     void validateParams(){
@@ -73,17 +185,20 @@ class JaxbBindingsConfigMojo extends AbstractMojo {
             throw new RuntimeException("File '${schemasDir.canonicalPath}' is not a directory, but it must be and contain XML files.");
         }
 
-        getLog().debug("Checking if ${this.xsdOutputPath} does not exist...");
-        File xsdOutputDir = new File(this.basedir, this.xsdOutputPath);
-        if( xsdOutputDir.exists() && !this.overwriteXsdOutput ){
-            getLog().error("Unable to remove directory ${xsdOutputDir.canonicalPath}, since 'overwriteXsdOutput' is set to false.");
-            throw new RuntimeException("Unable to remove directory ${xsdOutputDir.canonicalPath}, since 'overwriteXsdOutput' is set to false.")
-        }else if( xsdOutputDir.exists() ) {
-            getLog().debug("Removing output directory ${xsdOutputDir}...");
-            FileUtils.delete(xsdOutputDir);
+        getLog().debug("Checking if ${this.outputPath} does not exist...");
+        File outputDir = new File(this.basedir, this.outputPath);
+        if( outputDir.exists() && !this.overwritePluginOutput ){
+            getLog().error("Unable to remove directory ${outputDir.canonicalPath}, since 'overwritePluginOutput' is set to false.");
+            throw new RuntimeException("Unable to remove directory ${outputDir.canonicalPath}, since 'overwritePluginOutput' is set to false.")
+        }else if( outputDir.exists() ) {
+            getLog().debug("Removing output directory ${outputDir}...");
+            FileUtils.delete(outputDir);
         }
-        xsdOutputDir.mkdirs();
+        outputDir.mkdirs();
 
+        getJavaDir().mkdirs();
+        getJaxbDir().mkdirs();
+        getXsdDir().mkdirs();
 
 
     }

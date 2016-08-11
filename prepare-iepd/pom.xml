@@ -45,8 +45,11 @@
                         </goals>
                         <configuration>
                             <iepdDirPath>${iepd.dir}</iepdDirPath>
-                            <xsdOutputPath>../java-bindings/src/main/xsd</xsdOutputPath>
-                            <overwriteXsdOutput>true</overwriteXsdOutput>
+                            <overwritePluginOutput>true</overwritePluginOutput>
+                            <outputPath>../java-bindings/src/main</outputPath>
+                            <jaxbBindingFiles>
+                                <jaxbBindingFile>${iepd.dir}/my-bindings.jaxb</jaxbBindingFile>
+                            </jaxbBindingFiles>
                         </configuration>
                     </execution>
                 </executions>

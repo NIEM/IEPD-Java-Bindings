@@ -22,12 +22,55 @@ class IEPDDirectory {
     Map<String, String> uriToPackageMapping = [:]
 
     public IEPDDirectory(File base){
-        init(base);
+        this.base = base;
+        init();
     }
 
-    private void init(File base){
+    /**
+     * Scans for all unique packages defined by this IEPD.
+     */
+    public List<String> getUniquePackages(){
+        List packages = []
+        if( this.uriToPackageMapping && this.uriToPackageMapping.keySet().size() > 0 ){
+            for( String uri : this.uriToPackageMapping.keySet() ){
+                String packageName = this.uriToPackageMapping.get(uri);
+                if( !packages.contains(packageName) ){
+                    packages.add(packageName);
+                }
+            }
+        }
+        return packages;
+    }
+
+    public String getUriForPackageName(String packageName){
+        if( this.uriToPackageMapping && this.uriToPackageMapping.keySet().size() > 0 ){
+            for( String uri : this.uriToPackageMapping.keySet() ){
+                String currentPackageName = this.uriToPackageMapping.get(uri);
+                if( packageName.equals(currentPackageName) ){
+                    return uri;
+                }
+            }
+        }
+        LogHolder.getLog().warn("No URI found for package name: "+packageName);
+        return null;
+    }
+
+    /**
+     * Setter method prevents outside folks from setting the base after construction.  Only the Constructor is the way to
+     * do this.
+     */
+    private void setBase(File f){}
+
+    //==================================================================================================================
+    //  Initialization (reading of IEPD directory)
+    //==================================================================================================================
+    /**
+     * Called to initialize the process( read the IEPD directory )
+     * <br/><Br/>
+     * @param base
+     */
+    private void init(){
         LogHolder.getLog().debug("Parsing IEPD contents from: "+base.canonicalPath);
-        this.base = base;
 
         LogHolder.getLog().debug("Searching for XML Schema files...");
         this.schemaFiles = [];

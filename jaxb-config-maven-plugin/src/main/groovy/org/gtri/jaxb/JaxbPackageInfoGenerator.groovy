@@ -1,32 +1,14 @@
 package org.gtri.jaxb
 
-/**
- * Given a map of uri => prefix mappings, this class knows how to generate the contents of package-info.java with the
- * appropriate data to make namespaces come out "pretty" instead of ns1, ns2, etc.
- */
 class JaxbPackageInfoGenerator {
 
-    String fileContents = null;
-    private Map mappings;
+    /**
+     * Given the output file, package name, URI, and list of namespace/prefix mappings, this static method writes
+     * a package-info.java file that JAXB can use to make namespaces "Pretty" on output.
+     */
+    static void writePackageInfo(File outputFile, String packageName, String uri, Map mappings){
+        LogHolder.getLog().info("Generating ${outputFile.canonicalPath}")
 
-    public JaxbPackageInfoGenerator(Map nsPrefixMappings){
-        this.mappings = nsPrefixMappings;
-        updateFileContents();
-    }
-
-    public void setMappings(Map mappings){
-        this.mappings = mappings;
-        updateFileContents();
-    }
-
-    public String getFileContents(){
-        if( fileContents == null )
-            throw new UnsupportedOperationException("package-info.java File Contents is empty!");
-        return fileContents;
-    }
-
-    void updateFileContents(){
-        fileContents = null;
         StringWriter writer = new StringWriter();
         writer.println("""
 
@@ -35,30 +17,28 @@ class JaxbPackageInfoGenerator {
  */
 
 @javax.xml.bind.annotation.XmlSchema(
-    namespace = "${getDefaultNamespace()}", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED,
+    namespace = "${uri}", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED,
     xmlns = {
-${generateXmlNsData()}
+${generateXmlNsData(mappings)}
     }
 )
-package @@PACKAGE@@;
+package ${packageName};
 
 import javax.xml.bind.annotation.*;
 
 """)
-        fileContents = writer.toString();
+
+        outputFile << writer.toString();
+
     }
 
-    String generateXmlNsData(){
+    static String generateXmlNsData(Map mappings){
         StringWriter writer = new StringWriter();
         for( String uri : mappings.keySet() ?: []){
             String prefix = mappings.get(uri);
-            writer.append("        @XmlNs(prefix = \"${prefix}\", namespaceURI = \"${uri}\"), ")
+            writer.append("        @XmlNs(prefix = \"${prefix}\", namespaceURI = \"${uri}\"), \n")
         }
         return writer.toString();
-    }
-
-    String getDefaultNamespace(){
-        return mappings.keySet().first();
     }
 
 }/* end JaxbPackageInfoGenerator */
