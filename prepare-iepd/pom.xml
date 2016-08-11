@@ -48,7 +48,7 @@
                             <overwritePluginOutput>true</overwritePluginOutput>
                             <outputPath>../java-bindings/src/main</outputPath>
                             <jaxbBindingFiles>
-                                <jaxbBindingFile>${iepd.dir}/my-bindings.jaxb</jaxbBindingFile>
+                                <jaxbBindingFile>${iepd.dir}/my-bindings.xjb</jaxbBindingFile>
                             </jaxbBindingFiles>
                         </configuration>
                     </execution>

@@ -35,10 +35,10 @@ class JaxbBindingsGenerator {
 
             writer << """
 
-    <jaxb:bindings schemaLocation="${relativePath}" node="/xsd:schema">
-        <jaxb:schemaBinding>
+    <jaxb:bindings schemaLocation="${relativePath}" node="//xsd:schema">
+        <jaxb:schemaBindings>
             <jaxb:package name="${iepd.uriToPackageMapping.get(schemaInfo.targetNamespace)}" />
-        </jaxb:schemaBinding>
+        </jaxb:schemaBindings>
     </jaxb:bindings>
 
 """

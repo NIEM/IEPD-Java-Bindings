@@ -54,11 +54,6 @@ class JaxbBindingsConfigMojo extends AbstractMojo {
         writePackageInfoJavas(iepd);
         writeJaxbBindingsFile(iepd);
 
-//        JaxbPackageInfoGenerator packageInfoGenerator = new JaxbPackageInfoGenerator(iepd.getUriPrefixMapping());
-//        String packageInfoFileContents = packageInfoGenerator.getFileContents();
-
-//        JaxbPackageInfoGenerator.writeJavaPackageInfo("$basedir/src/main/java/${packageName.replace('.','/')}/package-info.java",packageName,"http://example.com/template/1.0/",namespaceScanner.namespaceMap)
-//        JaxbBindingsGenerator.writeJaxbBindings("$basedir/src/main/xjb/generated-bindings.xjb",rootSchema,packageName,basedir,namespaceScanner.schemaLocation)
     }
 
     /**
@@ -118,7 +113,7 @@ class JaxbBindingsConfigMojo extends AbstractMojo {
         File jaxbOutDir = getJaxbDir();
         copyOverJaxbFiles(iepd, jaxbOutDir);
 
-        File jaxbOutputFile = new File(jaxbOutDir, "generated-bindings.jaxb");
+        File jaxbOutputFile = new File(jaxbOutDir, "generated-bindings.xjb");
         JaxbBindingsGenerator.writeJaxbBindings(jaxbOutputFile, iepd);
     }//end writeJaxbBindingsFile()
 
@@ -132,7 +127,8 @@ class JaxbBindingsConfigMojo extends AbstractMojo {
                 if( jaxbFile.exists() ){
                     File outputFile = new File(jaxbOutDir, jaxbFile.name);
                     getLog().info("Copying file[${jaxbFile.canonicalPath}] to [${outputFile.canonicalPath}]...")
-                    Files.copy(jaxbFile.canonicalFile.toPath(), outputFile.canonicalFile.toPath());
+//                    Files.copy(jaxbFile.canonicalFile.toPath(), outputFile.canonicalFile.toPath());
+                    getLog().error("Due to an existing ERROR in the jaxb2-maven-plugin, additional xjc files are precluded and will NOT be copied.")
                 }
             }
         }else{
@@ -147,7 +143,7 @@ class JaxbBindingsConfigMojo extends AbstractMojo {
         return new File(new File(this.basedir, this.outputPath), "xsd");
     }
     File getJaxbDir(){
-        return new File(new File(this.basedir, this.outputPath), "jaxb");
+        return new File(new File(this.basedir, this.outputPath), "xjb");
     }
 
     void validateParams(){
