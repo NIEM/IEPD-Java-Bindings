@@ -1,5 +1,6 @@
 package com.example.niem.iepd;
 
+import org.apache.log4j.Logger;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -9,6 +10,8 @@ import java.net.URI;
 
 
 public class Main {
+    private static final Logger logger = Logger.getLogger(Main.class);
+
     // Base URI the Grizzly HTTP server will listen on
     public static final String BASE_URI = "http://localhost:8080/app/";
 
@@ -17,6 +20,7 @@ public class Main {
      * @return Grizzly HTTP server.
      */
     public static HttpServer startServer() {
+        logger.info("Starting the Grizzly server...");
         // create a resource config that scans for JAX-RS resources and providers
         // in com.example package
         final ResourceConfig rc = new ResourceConfig().packages("com.example.niem.iepd");
@@ -32,6 +36,7 @@ public class Main {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
+        logger.info("Starting the server...");
         final HttpServer server = startServer();
 
 //        System.out.println(String.format("Jersey app started with WADL available at "

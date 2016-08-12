@@ -8,11 +8,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import io.github.benas.randombeans.api.EnhancedRandom;
+import org.apache.log4j.Logger;
 import org.glassfish.grizzly.http.server.HttpServer;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import java.io.File;
 
@@ -20,32 +19,49 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 public class RestServiceTest {
-    private HttpServer server;
-    private WebTarget target;
+    private static Logger logger = Logger.getLogger(RestServiceTest.class);
 
-    @Before
-    public void setUp() throws Exception {
+    private static HttpServer server;
+    private static WebTarget target;
+
+
+    @BeforeClass
+    public static void setUp() throws Exception {
         server = Main.startServer();
-
         Client c = ClientBuilder.newClient();
         target = c.target(Main.BASE_URI);
     }
 
-    @After
-    public void tearDown() throws Exception {
+    @AfterClass
+    public static void tearDown() throws Exception {
         server.stop();
     }
 
+    @After
+    public void printStart(){
+        logger.info("======================================== STARTING TEST ========================================");
+    }
+    @Before
+    public void printStop(){
+        logger.info("======================================== STOPPING TEST ========================================\n\n");
+    }
+
+
     @Test
     public void testGetExchange() {
-        String responseMsg = target.path("template/exchange/12").request().get(String.class);
+        logger.info("Testing a random exchange is generated...");
+        String responseMsg = target.path("sample/random/12").request().get(String.class);
         assert responseMsg != null;
-        assert responseMsg.contains("<template:TemplateExchange");
+
+        logger.debug("Response: "+responseMsg);
+
+        logger.info("Successfully tested random exchange result!");
     }
 
     @Test
     public void testSendExchange() {
-        Response response = target.path("template/exchange")
+        logger.info("Testing that we can put a sample instance...");
+        Response response = target.path("sample/pretty-print")
                 .request(MediaType.APPLICATION_XML).accept(MediaType.APPLICATION_XML)
                 .post(Entity.entity(new File("target/test-classes/sample-exchange.xml"),MediaType.APPLICATION_XML));
         assertEquals(response.getStatus(),(Response.Status.CREATED.getStatusCode()));
