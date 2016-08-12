@@ -57,6 +57,15 @@ class JaxbBindingsConfigMojo extends AbstractMojo {
     }
 
     /**
+     * Responsible for creating a file which contains information about what was generated.  It can be used to deduce
+     * what was in the schemas for the purpose of dynamically loading JAXB, for example.
+     */
+    void writeJaxbPropertiesFile(IEPDDirectory iepd){
+        File resourcesDir = getResourcesDir();
+
+    }
+
+    /**
      * Responsible for creating the output directores for this IEPD.  This is based on the packages determined by the
      * schemas (each one will need a package-info.java file).
      * <br/><br/>
@@ -145,6 +154,9 @@ class JaxbBindingsConfigMojo extends AbstractMojo {
     File getJaxbDir(){
         return new File(new File(this.basedir, this.outputPath), "xjb");
     }
+    File getResourcesDir(){
+        return new File(new File(this.basedir, this.outputPath), "resources");
+    }
 
     void validateParams(){
         getLog().info("Validating parameters: \n"+
@@ -195,6 +207,7 @@ class JaxbBindingsConfigMojo extends AbstractMojo {
         getJavaDir().mkdirs();
         getJaxbDir().mkdirs();
         getXsdDir().mkdirs();
+        getResourcesDir().mkdirs();
 
 
     }
