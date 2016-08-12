@@ -1,4 +1,4 @@
-package com.example.niem.iepd;
+package org.gtri.niem.rest;
 
 import org.apache.log4j.Logger;
 import org.glassfish.grizzly.http.server.HttpServer;
@@ -23,7 +23,7 @@ public class Main {
         logger.info("Starting the Grizzly server...");
         // create a resource config that scans for JAX-RS resources and providers
         // in com.example package
-        final ResourceConfig rc = new ResourceConfig().packages("com.example.niem.iepd");
+        final ResourceConfig rc = new ResourceConfig().packages("org.gtri.niem.rest");
 
         // create and start a new instance of grizzly http server
         // exposing the Jersey application at BASE_URI
@@ -36,11 +36,12 @@ public class Main {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
-        logger.info("Starting the server...");
+        logger.info("Entered the main method...");
         final HttpServer server = startServer();
 
-//        System.out.println(String.format("Jersey app started with WADL available at "
-//                + "%sapplication.wadl\nHit enter to stop it...", BASE_URI));
+
+        logger.info(String.format("Jersey app started with WADL available at "
+                + "%sapplication.wadl\nHit enter to stop it...", BASE_URI));
 
         System.in.read();
         server.stop();

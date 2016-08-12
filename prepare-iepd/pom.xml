@@ -47,7 +47,10 @@
                             <iepdDirPath>${iepd.dir}</iepdDirPath>
                             <overwritePluginOutput>true</overwritePluginOutput>
                             <outputPath>../java-bindings/src/main</outputPath>
-                            <instanceXmlPath>../java-bindings/src/test/resources/xml</instanceXmlPath>
+                            <instanceXmlPaths>
+                                <instanceXmlPath>../java-bindings/src/test/resources/xml</instanceXmlPath>
+                                <instanceXmlPath>../rest-services/src/test/resources/xml</instanceXmlPath>
+                            </instanceXmlPaths>
                             <jaxbBindingFiles>
                                 <jaxbBindingFile>${iepd.dir}/my-bindings.xjb</jaxbBindingFile>
                             </jaxbBindingFiles>
