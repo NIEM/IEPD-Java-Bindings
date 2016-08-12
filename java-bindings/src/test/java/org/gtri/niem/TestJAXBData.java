@@ -96,26 +96,12 @@ public class TestJAXBData {
     }
 
 
-    private JAXBContext createJAXBContext() throws JAXBException {
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("jaxb_config");
-        String packagesList = resourceBundle.getString("jaxb.packages");
-        if( packagesList != null && packagesList.trim().length() > 0 ) {
-            return JAXBContext.newInstance(packagesList);
-        }else{
-            throw new JAXBException("Cannot find any resource bundle 'jaxb_config' containing a jaxb.packages class");
-        }
-    }
-
     @Test
     public void runTest() throws Exception {
         logger.info("Executing JAXB test on XML File["+this.xmlFile.getCanonicalPath()+"]...");
 
-        logger.debug("Creating JAXB Context...");
-        JAXBContext context = createJAXBContext();
-        assertThat(context, notNullValue());
-
         logger.debug("Creating unmarshaller...");
-        Unmarshaller unmarshaller = context.createUnmarshaller();
+        Unmarshaller unmarshaller = JaxbHelper.createUnmarshaller();
         assertThat(unmarshaller, notNullValue());
 
         logger.debug("Unmarshalling "+this.xmlFile);
