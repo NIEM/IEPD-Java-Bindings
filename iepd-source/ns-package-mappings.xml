@@ -9,6 +9,6 @@
 
     <mapping package="niem.core" uri="http://release.niem.gov/niem/niem-core/3.0/" />
     <mapping package="niem.appinfo" uri="http://release.niem.gov/niem/appinfo/3.0/" />
-    <mapping package="template" uri="http://example.com/template/1.0/" />
+    <mapping package="com.example.niem.iepd" uri="http://example.com/template/1.0/" />
 
 </namespacePrefixMappings>
