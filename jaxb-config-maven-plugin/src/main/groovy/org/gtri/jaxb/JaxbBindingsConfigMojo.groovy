@@ -33,6 +33,13 @@ class JaxbBindingsConfigMojo extends AbstractMojo {
     private String outputPath = "../java-bindings/src/main"
 
     /**
+     * Where (relative to this project) the XML instances for testing will go.
+     */
+    @Parameter
+    private String instanceXmlPath = "../java-bindings/src/test/resources/xml"
+
+
+    /**
      * The user can pass additional jaxb binding files this way.
      */
     @Parameter
@@ -54,16 +61,23 @@ class JaxbBindingsConfigMojo extends AbstractMojo {
         writePackageInfoJavas(iepd);
         writeJaxbBindingsFile(iepd);
 
+        copyInstances(iepd);
     }
 
     /**
-     * Responsible for creating a file which contains information about what was generated.  It can be used to deduce
-     * what was in the schemas for the purpose of dynamically loading JAXB, for example.
+     * Responsible for copying over all of the XML instances from the iepd to the configured output path.
      */
-    void writeJaxbPropertiesFile(IEPDDirectory iepd){
-        File resourcesDir = getResourcesDir();
-
-    }
+    void copyInstances(IEPDDirectory iepd){
+        File instanceXmlDir = new File(this.basedir, this.instanceXmlPath);
+        if( iepd.getInstanceFiles() != null && iepd.getInstanceFiles().size() > 0 ){
+            for( File instanceFile : iepd.getInstanceFiles() ){
+                String relativePath = instanceFile.canonicalPath.replace(iepd.base.canonicalPath + File.separator + "xml" + File.separator, "");
+                File outputFile = new File(instanceXmlDir, relativePath);
+                getLog().info("Copying file[${instanceFile.canonicalPath}] to [${outputFile.canonicalPath}]...")
+                Files.copy(instanceFile.canonicalFile.toPath(), outputFile.canonicalFile.toPath());
+            }
+        }
+    }//end copyInstances()
 
     /**
      * Responsible for creating the output directores for this IEPD.  This is based on the packages determined by the
@@ -208,6 +222,19 @@ class JaxbBindingsConfigMojo extends AbstractMojo {
         getJaxbDir().mkdirs();
         getXsdDir().mkdirs();
         getResourcesDir().mkdirs();
+
+
+
+        getLog().debug("Checking if ${this.instanceXmlPath} does not exist...");
+        File instanceXmlDir = new File(this.basedir, this.instanceXmlPath);
+        if( instanceXmlDir.exists() && !this.overwritePluginOutput ){
+            getLog().error("Unable to remove directory ${instanceXmlDir.canonicalPath}, since 'overwritePluginOutput' is set to false.");
+            throw new RuntimeException("Unable to remove directory ${instanceXmlDir.canonicalPath}, since 'overwritePluginOutput' is set to false.")
+        }else if( instanceXmlDir.exists() ) {
+            getLog().debug("Removing output directory ${instanceXmlDir}...");
+            FileUtils.delete(instanceXmlDir);
+        }
+        instanceXmlDir.mkdirs();
 
 
     }

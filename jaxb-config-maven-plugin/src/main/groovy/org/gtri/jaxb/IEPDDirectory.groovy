@@ -78,7 +78,7 @@ class IEPDDirectory {
 
         LogHolder.getLog().debug("Searching for XML Instance files...");
         this.instanceFiles = [];
-        FileUtils.findFiles(new File(base, "xsd"), this.instanceFiles, FileUtils.XML_FILE_FILTER);
+        FileUtils.findFiles(new File(base, "xml"), this.instanceFiles, FileUtils.XML_FILE_FILTER);
 
         File prefixFile = new File(this.base, NS_PREFIX_FILE);
         if( !prefixFile.exists() ){
