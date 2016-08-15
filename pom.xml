@@ -3,7 +3,7 @@
 
   <groupId>org.gtri.niem</groupId>
   <artifactId>java-bindings-reactor</artifactId>
-  <version>0.2-SNAPSHOT</version>
+  <version>0.3-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <properties>
@@ -16,6 +16,17 @@
     <gmavenProviderSelection>2.0</gmavenProviderSelection>
     <groovyVersion>2.2.1</groovyVersion>
   </properties>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.17</version>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
 
 
   <build>
@@ -37,6 +48,7 @@
   <modules>
     <module>jaxb-config-maven-plugin</module>
     <module>xml-randomizer</module>
+    <module>prepare-iepd</module>
     <module>java-bindings</module>
     <module>rest-services</module>
   </modules>

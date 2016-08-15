@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<!--
+  This file provides the JAXB compiler with information used to build part of a JAXB Binding file, specifically how
+  particular XML Schema files should be mapped to output package names, based on their target namespace.  If you
+  leave a namespace URI out of this list, then the system will warn you and generate a package for you.
+-->
+<namespacePrefixMappings>
+
+    <mapping package="niem.core" uri="http://release.niem.gov/niem/niem-core/3.0/" />
+    <mapping package="niem.appinfo" uri="http://release.niem.gov/niem/appinfo/3.0/" />
+    <mapping package="com.example.template" uri="http://example.com/template/1.0/" />
+
+</namespacePrefixMappings>
