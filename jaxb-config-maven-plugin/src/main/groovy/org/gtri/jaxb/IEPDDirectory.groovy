@@ -187,9 +187,24 @@ class IEPDDirectory {
     private void scanSchemas(){
         this.schemas = []
         for( File file : this.schemaFiles ?: []){
-            LogHolder.getLog().debug("Processing schema file: "+ file)
+            LogHolder.getLog().info("Processing schema file: "+ printRelativePath(file))
             SchemaInfo schemaInfo = new SchemaInfo(file);
             this.schemas.add(schemaInfo);
+        }
+
+        Map targetNsFiles = [:]
+        for( SchemaInfo info : this.schemas ){
+            List files = []
+            if( targetNsFiles.containsKey(info.targetNamespace) )
+                files = targetNsFiles.get(info.targetNamespace);
+            files.add(info.file);
+            targetNsFiles.put(info.targetNamespace, files);
+        }
+
+        for( Map.Entry nsFilesEntry : targetNsFiles.entrySet() ){
+            if( nsFilesEntry.value.size() > 1 ){
+                LogHolder.getLog().error("Target Namespace[${nsFilesEntry.key}] is mapped multiple times: "+nsFilesEntry.value)
+            }
         }
 
         // TODO Should we download remotely reference schemas?
@@ -198,4 +213,7 @@ class IEPDDirectory {
 
 
 
+    String printRelativePath(File file){
+        return file.canonicalPath.replace(this.base.canonicalPath + File.separator, "");
+    }
 }

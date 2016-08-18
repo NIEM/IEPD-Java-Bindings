@@ -3,6 +3,15 @@ package org.gtri.jaxb;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.Mojo
 import org.apache.maven.plugins.annotations.Parameter
+import org.dom4j.Branch
+import org.dom4j.Document
+import org.dom4j.Element
+import org.dom4j.Namespace
+import org.dom4j.Node
+import org.dom4j.io.OutputFormat
+import org.dom4j.io.SAXReader
+import org.dom4j.io.XMLWriter
+import org.dom4j.tree.DefaultComment
 
 import java.nio.file.Files;
 
@@ -56,7 +65,7 @@ class JaxbBindingsConfigMojo extends AbstractMojo {
         validateParams();
 
         getLog().debug("Parsing the IEPD directory...");
-        IEPDDirectory iepd = new IEPDDirectory(new File(this.basedir, this.iepdDirPath));
+        IEPDDirectory iepd = new IEPDDirectory(getFile(this.iepdDirPath));
 
         // TODO - Right now we simply copy the schemas.  In the future, we may translate them first.
         copyOverSchemaFiles(iepd);
@@ -76,7 +85,7 @@ class JaxbBindingsConfigMojo extends AbstractMojo {
                 String relativePath = instanceFile.canonicalPath.replace(iepd.base.canonicalPath + File.separator + "xml" + File.separator, "");
 
                 for( String instanceXmlDirPath : this.instanceXmlPaths ){
-                    File instanceXmlDir = new File(this.basedir, instanceXmlDirPath);
+                    File instanceXmlDir = getFile(instanceXmlDirPath);
                     File outputFile = new File(instanceXmlDir, relativePath);
                     getLog().info("Copying file[${instanceFile.canonicalPath}] to [${outputFile.canonicalPath}]...")
                     Files.copy(instanceFile.canonicalFile.toPath(), outputFile.canonicalFile.toPath());
@@ -140,42 +149,118 @@ class JaxbBindingsConfigMojo extends AbstractMojo {
     void writeJaxbBindingsFile(IEPDDirectory iepd){
         getLog().debug("Creating JAXB Bindings file(s)...");
         File jaxbOutDir = getJaxbDir();
-        copyOverJaxbFiles(iepd, jaxbOutDir);
 
         File jaxbOutputFile = new File(jaxbOutDir, "generated-bindings.xjb");
         JaxbBindingsGenerator.writeJaxbBindings(jaxbOutputFile, iepd);
+
+        if( this.jaxbBindingFiles != null && this.jaxbBindingFiles.length > 0 ) {
+            getLog().debug("Appending data from JAXB Bindings files....")
+            SAXReader reader = new SAXReader();
+            Document mainJaxbBindings = reader.read(jaxbOutputFile);
+
+            List<File> bindingFiles = []
+            for( String s : this.jaxbBindingFiles ){
+                File bindingFile = getFile(s);
+                if( bindingFile == null ){
+                    getLog().error("Cannot find binding file: ${s}, this file will be IGNORED!");
+                    continue;
+                }
+                bindingFiles.add(bindingFile);
+            }
+
+            Collections.sort(bindingFiles, {File f1, File f2 -> return f1.getName().compareToIgnoreCase(f2.getName())} as Comparator);
+
+            for( File cur : bindingFiles ){
+                getLog().debug("Appending data from JAXB Bindings file [${cur.canonicalPath}]....")
+                Document bindingFile = reader.read(cur);
+                addNamespaces(mainJaxbBindings, bindingFile);
+                mainJaxbBindings.getRootElement().add(new DefaultComment(" STARTING FILE ${cur.name} "))
+                List topLevelNodes = bindingFile.getRootElement().selectNodes("/*/*");
+                for( Object obj : topLevelNodes ){
+                    if( obj instanceof Node ) {
+                        Node node = (Node) obj;
+                        mainJaxbBindings.getRootElement().add(node.detach());
+                    }
+                }
+                mainJaxbBindings.getRootElement().add(new DefaultComment(" STOPPING FILE ${cur.name} "))
+            }
+
+            getLog().debug("Writing back to file ${jaxbOutputFile.canonicalPath}...")
+            jaxbOutputFile.delete();
+            XMLWriter writer = new XMLWriter(new FileWriter(jaxbOutputFile, false), OutputFormat.createPrettyPrint());
+            writer.write(mainJaxbBindings);
+            writer.flush();
+            writer.close();
+        }
+
     }//end writeJaxbBindingsFile()
 
-    /**
-     * Performs a copy operation for any values found in the jaxbBindingFiles array above.
-     */
-    void copyOverJaxbFiles(IEPDDirectory iepd, File jaxbOutDir) {
-        if( this.jaxbBindingFiles != null && this.jaxbBindingFiles.length > 0 ){
-            for( String jaxbFilePath : this.jaxbBindingFiles ){
-                File jaxbFile = new File(this.basedir, jaxbFilePath);
-                if( jaxbFile.exists() ){
-                    File outputFile = new File(jaxbOutDir, jaxbFile.name);
-                    getLog().info("Copying file[${jaxbFile.canonicalPath}] to [${outputFile.canonicalPath}]...")
-//                    Files.copy(jaxbFile.canonicalFile.toPath(), outputFile.canonicalFile.toPath());
-                    getLog().error("Due to an existing ERROR in the jaxb2-maven-plugin, additional xjc files are precluded and will NOT be copied.")
+    void addNamespaces(Document d1, Document d2){
+        List<Namespace> namespaces = collectNamespaces(d2);
+        for( Namespace ns : namespaces ){
+            if( !hasNamespaceUri([d1.getRootElement().getNamespace()], ns.getURI()) &&
+                    !hasNamespaceUri(d1.getRootElement().additionalNamespaces(), ns.getURI())){
+                d1.getRootElement().add(ns);
+            }
+        }
+    }
+
+    List<Namespace> collectNamespaces(Document d){
+        List allNamespaces = []
+        List things = d.getRootElement().selectNodes("//*")
+        for( Object obj : things ){
+            if( obj instanceof Element ){
+                Element e = (Element) obj;
+                mergeNamespacelist(allNamespaces, [e.getNamespace()]);
+                mergeNamespacelist(allNamespaces, e.additionalNamespaces());
+            }
+        }
+        return allNamespaces;
+    }
+
+    void mergeNamespacelist(List l1, List l2){
+        if( l2?.size() > 0 ){
+            for( Namespace ns : l2 ){
+                if( !hasNamespaceUri(l1, ns.getURI()) ){
+                    l1.add(ns);
                 }
             }
-        }else{
-            getLog().info("Found no additional jaxb files specified by <jaxbBindingFiles>, not copying over any.")
         }
-    }//end copyOverJaxbFiles()
+    }
+
+    boolean hasNamespaceUri(List l1, String uri ){
+        if( l1?.size() > 0 ){
+            for( Namespace ns : l1 ){
+                if( ns.getURI().equalsIgnoreCase(uri) ){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 
     File getJavaDir(){
-        return new File(new File(this.basedir, this.outputPath), "java");
+        return new File(getFile(this.outputPath), "java");
     }
     File getXsdDir(){
-        return new File(new File(this.basedir, this.outputPath), "xsd");
+        return new File(getFile(this.outputPath), "xsd");
     }
     File getJaxbDir(){
-        return new File(new File(this.basedir, this.outputPath), "xjb");
+        return new File(getFile(this.outputPath), "xjb");
     }
     File getResourcesDir(){
-        return new File(new File(this.basedir, this.outputPath), "resources");
+        return new File(getFile(this.outputPath), "resources");
+    }
+
+    File getFile(String givenPath){
+        File dir = new File(givenPath);
+        if( dir.exists() )
+            return dir;
+        dir = new File(this.basedir, givenPath)
+        if( dir.exists() )
+            return dir;
+        return null;
     }
 
     void validateParams(){
@@ -184,13 +269,13 @@ class JaxbBindingsConfigMojo extends AbstractMojo {
             "    basedir = [${this.basedir.canonicalPath}]");
 
         getLog().debug("Checking that ${this.iepdDirPath} exists...");
-        File iepdDir = new File(this.basedir, this.iepdDirPath);
-        if( !iepdDir.exists() ){
-            getLog().error("Could not find IEPD Directory: "+iepdDir.canonicalPath+", based on parameter value: "+iepdDirPath);
-            throw new FileNotFoundException("Could not find IEPD directory: "+iepdDir.canonicalPath);
+        File iepdDir = getFile(this.iepdDirPath);
+        if( iepdDir == null ){
+            getLog().error("Could not find IEPD Directory based on parameter value: "+iepdDirPath);
+            throw new FileNotFoundException("Could not find IEPD directory: "+this.iepdDirPath);
         }else if( !iepdDir.isDirectory() ){
-            getLog().error("Expecting IEPD Directory '${iepdDir.canonicalPath}' to be a directory!");
-            throw new RuntimeException("File '${iepdDir.canonicalPath}' is not a directory, and thus cannot contain an IEPD or schemas.")
+            getLog().error("Expecting IEPD Directory '${this.iepdDirPath}' to be a directory!");
+            throw new RuntimeException("File '${this.iepdDirPath}' is not a directory, and thus cannot contain an IEPD or schemas.")
         }
 
         getLog().debug("Checking that ${this.iepdDirPath}/xsd exists...");
@@ -214,11 +299,11 @@ class JaxbBindingsConfigMojo extends AbstractMojo {
         }
 
         getLog().debug("Checking if ${this.outputPath} does not exist...");
-        File outputDir = new File(this.basedir, this.outputPath);
-        if( outputDir.exists() && !this.overwritePluginOutput ){
-            getLog().error("Unable to remove directory ${outputDir.canonicalPath}, since 'overwritePluginOutput' is set to false.");
-            throw new RuntimeException("Unable to remove directory ${outputDir.canonicalPath}, since 'overwritePluginOutput' is set to false.")
-        }else if( outputDir.exists() ) {
+        File outputDir = getFile(this.outputPath);
+        if( outputDir != null && !this.overwritePluginOutput ){
+            getLog().error("Unable to remove directory ${this.outputPath}, since 'overwritePluginOutput' is set to false.");
+            throw new RuntimeException("Unable to remove directory ${this.outputPath}, since 'overwritePluginOutput' is set to false.")
+        }else if( outputDir?.exists() ) {
             getLog().debug("Removing output directory ${outputDir}...");
             FileUtils.delete(outputDir);
         }
@@ -229,15 +314,13 @@ class JaxbBindingsConfigMojo extends AbstractMojo {
         getXsdDir().mkdirs();
         getResourcesDir().mkdirs();
 
-
-
         for( String instanceXmlPath : this.instanceXmlPaths ?: []){
             getLog().debug("Checking if ${instanceXmlPath} does not exist...");
-            File instanceXmlDir = new File(this.basedir, instanceXmlPath);
-            if( instanceXmlDir.exists() && !this.overwritePluginOutput ){
+            File instanceXmlDir = getFile(instanceXmlPath);
+            if( instanceXmlDir != null && !this.overwritePluginOutput ){
                 getLog().error("Unable to remove directory ${instanceXmlDir.canonicalPath}, since 'overwritePluginOutput' is set to false.");
                 throw new RuntimeException("Unable to remove directory ${instanceXmlDir.canonicalPath}, since 'overwritePluginOutput' is set to false.")
-            }else if( instanceXmlDir.exists() ) {
+            }else if( instanceXmlDir?.exists() ) {
                 getLog().debug("Removing output directory ${instanceXmlDir}...");
                 FileUtils.delete(instanceXmlDir);
             }

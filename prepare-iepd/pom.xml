@@ -18,16 +18,12 @@
         <version>0.3-SNAPSHOT</version>
     </parent>
 
-
     <properties>
-        <!-- TODO: Modify this value if you wish to use a different IEPD source directory, other than the default -->
-        <iepd.dir>../iepd-source</iepd.dir>
+        <!-- TODO: Update this file with the location of your IEPD, relative to the 'prepare-iepd' project. -->
+        <!--<iepd.dir>../iepd-source</iepd.dir>-->
+        <iepd.dir>../niem-3.2</iepd.dir>
 
     </properties>
-
-    <dependencies>
-
-    </dependencies>
 
     <build>
         <plugins>
@@ -52,6 +48,7 @@
                                 <instanceXmlPath>../rest-services/src/test/resources/xml</instanceXmlPath>
                             </instanceXmlPaths>
                             <jaxbBindingFiles>
+                                <!-- TODO: Have binding files?  Add them here -->
                                 <jaxbBindingFile>${iepd.dir}/my-bindings.xjb</jaxbBindingFile>
                             </jaxbBindingFiles>
                         </configuration>
@@ -61,4 +58,5 @@
 
         </plugins>
     </build>
+
 </project>
