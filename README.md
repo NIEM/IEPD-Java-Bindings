@@ -6,7 +6,7 @@ This project is meant to be an **example** of how one may go about creating a JA
 a NIEM based exchange.  While we have attempted to accommodate all sorts of NIEM-based schema idioms, please understand that
 not all schema models will translate into perfect Java beans.
 
-[![Build Status](https://travis-ci.org/jtmrice/IEPD-Java-Bindings.svg?branch=master)](https://travis-ci.org/jtmrice/IEPD-Java-Bindings)
+[![Build Status](https://travis-ci.org/gte250p/IEPD-Java-Bindings.svg?branch=master)](https://travis-ci.org/gte250p/IEPD-Java-Bindings)
 
 ### Usage
 * Update schema files with IEPD schemas here: `${basedir}/iepd-source/`
@@ -21,12 +21,14 @@ This project is based on the Template IEPD project here: [Template IEPD](https:/
 the project has been modified (potentially substantially) to include fringe error cases that exist with JAXB and NIEM, to
 illustrate and provide tests for this project.
 
+Additionally, the full NIEM release was added to directory niem-3.2, and some example configuration files exist in there.
+Note that this version of the NIEM release was modified to remove any external dependencies (an xsd:any was placed there instead).
+
 
 ### Note
 This is a **beta** release with known issues that limit its current capabilities:
-* Cannot work with GML
-* Has trouble randomly generating references (i.e., structures:ref and structures:id)
-* Cannot randomly generate with augmentation points or abstract elements
+* Cannot work with GML (and other external schemas)
+* Random Generation is a "best-effort" service.
 
 ### Features
 1. Generates Java class files from a simple IEPD with JAXB.
@@ -38,12 +40,13 @@ This is a **beta** release with known issues that limit its current capabilities
 7. Generates tests with random data depending on types.
 8. Creates some generic REST Web services that can be generated from an IEPD.
 9. Has Maven plugin to create `package-info.java` and JAXB bindings file customized from the schema documents.
+10. Provides sample NIEM binding information to JAXB
 
 
 ### Planned Future Capabilities
-* Create some generic Web services that can be generated from an IEPD (possibly another project).
-* Update Random data generator to handle NIEM/XML specific cases.
-* Setup randomly generated dates to use reasonable values.
+* Provide the ability to configure which exchange elements are used to generate web services, so services are more specific.
+* Generation of Web Service classes from schemas (and config) which is more specific and less generic.
+* Improve random generation of instances
 
 
 ### Giving Feedback
