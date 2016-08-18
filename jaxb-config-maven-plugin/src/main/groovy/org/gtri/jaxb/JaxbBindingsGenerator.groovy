@@ -1,5 +1,7 @@
 package org.gtri.jaxb
 
+import org.dom4j.Element
+
 class JaxbBindingsGenerator {
 
     static void writeJaxbBindings(File bindingsFile, IEPDDirectory iepd) {
@@ -39,6 +41,7 @@ class JaxbBindingsGenerator {
         <jaxb:schemaBindings>
             <jaxb:package name="${iepd.uriToPackageMapping.get(schemaInfo.targetNamespace)}" />
         </jaxb:schemaBindings>
+        ${writeClassRenaming(schemaInfo)}
     </jaxb:bindings>
 
 """
@@ -48,6 +51,29 @@ class JaxbBindingsGenerator {
         return writer.toString();
     }//end generateBindings()
 
+    /**
+     * Extracts each complex or simple type from the given schema, and for each one adds a renaming element which removes
+     * "Type" from the name.
+     */
+    static String writeClassRenaming(SchemaInfo schemaInfo){
+        StringWriter nameBindings = new StringWriter();
 
+        List complexTypes = schemaInfo.dom4jDoc.getRootElement().selectNodes("/*[local-name()='schema']/*[local-name()='complexType']");
+        if( complexTypes?.size() > 0 ){
+            for( Element complexTypeElement : complexTypes ) {
+                String name = complexTypeElement.selectObject("string(./@name)");
+
+                if (name.endsWith("Type")) {
+                    nameBindings.write("""
+            <jaxb:bindings node="//xsd:complexType[@name='${name}']">
+                <jaxb:class name="${name.substring(0, name.length() - 4)}" />
+            </jaxb:bindings>
+    """)
+                }
+            }
+        }
+
+        return nameBindings.toString();
+    }
 
 }
