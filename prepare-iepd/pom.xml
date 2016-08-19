@@ -20,8 +20,8 @@
 
     <properties>
         <!-- TODO: Update this file with the location of your IEPD, relative to the 'prepare-iepd' project. -->
-        <iepd.dir>../iepd-source</iepd.dir>
-        <!-- <iepd.dir>../niem-3.2</iepd.dir> -->
+        <!--<iepd.dir>../iepd-source</iepd.dir>-->
+         <iepd.dir>../niem-3.2</iepd.dir>
 
     </properties>
 

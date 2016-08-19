@@ -25,7 +25,7 @@ import java.util.ResourceBundle;
  * Created by brad on 8/9/16.
  */
 @RunWith(Parameterized.class)
-public class TestJAXBData {
+public class TestJAXBData extends AbstractTest {
 
     private static final Logger logger = Logger.getLogger(TestJAXBData.class);
 
@@ -34,14 +34,8 @@ public class TestJAXBData {
         ArrayList<Object[]> data = new ArrayList<>();
         File xmlDir = new File("./src/test/resources/xml");
 
-        FileFilter xmlFilter = new FileFilter() {
-            @Override
-            public boolean accept(File pathname) {
-                return pathname.isFile() && pathname.getName().toLowerCase().endsWith(".xml");
-            }
-        };
         ArrayList<File> files = new ArrayList<>();
-        populateFromFilter(files, xmlDir, xmlFilter);
+        populateFromFilter(files, xmlDir, XML_FILTER);
 
         if( files != null && files.size() > 0 ) {
             for (File f : files) {
@@ -54,39 +48,6 @@ public class TestJAXBData {
         return data;
     }
 
-    private static void populateFromFilter(List<File> xmlFiles, File dir, FileFilter filter){
-        if( dir.isDirectory() ){
-            File[] currentXmlFiles = dir.listFiles(filter);
-            if( currentXmlFiles != null && currentXmlFiles.length > 0 ){
-                for(File f:currentXmlFiles){
-                    xmlFiles.add(f);
-                }
-            }
-            File[] subdirs = dir.listFiles(new FileFilter() {
-                @Override
-                public boolean accept(File pathname) {
-                    return pathname.isDirectory();
-                }
-            });
-            if( subdirs != null && subdirs.length > 0 ){
-                for(File subdir:subdirs){
-                    populateFromFilter(xmlFiles, subdir, filter);
-                }
-            }
-        }else if( filter.accept(dir) ){
-            xmlFiles.add(dir);
-        }
-    }
-
-
-    @Before
-    public void printStartTest(){
-        logger.info("======================================== STARTING TEST ========================================");
-    }
-    @After
-    public void printStoppingTest(){
-        logger.info("======================================== STOPPING TEST ========================================\n\n");
-    }
 
 
     private File xmlFile;

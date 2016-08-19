@@ -1,6 +1,9 @@
 package org.gtri.jaxb
 
 import org.dom4j.Element
+import org.dom4j.Node
+import org.dom4j.io.OutputFormat
+import org.dom4j.io.XMLWriter
 
 class JaxbBindingsGenerator {
 
@@ -42,6 +45,7 @@ class JaxbBindingsGenerator {
             <jaxb:package name="${iepd.uriToPackageMapping.get(schemaInfo.targetNamespace)}" />
         </jaxb:schemaBindings>
         ${writeClassRenaming(schemaInfo)}
+        ${writeAdditionalBindings(schemaInfo)}
     </jaxb:bindings>
 
 """
@@ -50,6 +54,31 @@ class JaxbBindingsGenerator {
 
         return writer.toString();
     }//end generateBindings()
+
+    /**
+     * If the SchemaInfo has additional JAXB Bindings that should be written, this method will write them.  You
+     * configure these bindings in the binding-augmentations.xml file.
+     */
+    static String writeAdditionalBindings(SchemaInfo schemaInfo){
+        StringWriter writer = new StringWriter();
+        if( schemaInfo.additionalJaxbBindings?.size() > 0 ){
+
+            writer.write("\n\n        <!-- START ADDITIONAL BINDINGS -->\n");
+            XMLWriter xmlWriter = new XMLWriter(writer, OutputFormat.createPrettyPrint());
+            for( Node node : schemaInfo.additionalJaxbBindings ){
+                xmlWriter.write(node.detach());
+            }
+            xmlWriter.flush();
+            xmlWriter.close();
+            writer.flush();
+            writer.write("\n        <!-- END ADDITIONAL BINDINGS -->\n\n");
+
+        }else{
+            writer.write("\n        <!-- NO ADDITIONAL BINDINGS FOUND -->\n\n");
+        }
+        writer.close();
+        return writer.toString();
+    }
 
     /**
      * Extracts each complex or simple type from the given schema, and for each one adds a renaming element which removes

@@ -291,7 +291,7 @@ class JaxbBindingsConfigMojo extends AbstractMojo {
         getLog().debug("Checking that ${this.iepdDirPath}/xml exists...");
         File instancesDir = new File(iepdDir, "xml");
         if( !instancesDir.exists() ){
-            getLog().warn("Could not find directory ${instancesDir.canonicalPath}.  This means NO TESTS will be created for your JAXB project!");
+            getLog().warn("Could not find directory ${instancesDir.canonicalPath}.  This means NO TESTS marshalling/unmarshalling XML will be created for your JAXB project!");
             // We don't error here, it's technically OK for them not to have any tests.  Just not advisable.
         }else if( !instancesDir.isDirectory() ){
             getLog().error("File '${schemasDir.canonicalPath}' is not a directory, but it must be and contain XML files.")

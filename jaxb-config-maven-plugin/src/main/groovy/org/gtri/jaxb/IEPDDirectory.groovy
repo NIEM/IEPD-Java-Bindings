@@ -1,6 +1,9 @@
 package org.gtri.jaxb
 
 import jaxb_src.NameConverter
+import org.dom4j.Document
+import org.dom4j.Element
+import org.dom4j.io.SAXReader
 
 /**
  * This class parses the given IEPD directory and finds/maintains relevant and appropriate files.
@@ -11,6 +14,7 @@ class IEPDDirectory {
 
     public static final String NS_PREFIX_FILE = "ns-prefix-mappings.xml";
     public static final String NS_PACKAGE_MAPPING_FILE = "ns-package-mappings.xml";
+    public static final String BINDING_AUGMENTATIONS_FILE = "binding-augmentations.xml";
 
 
     File base = null;
@@ -98,6 +102,12 @@ class IEPDDirectory {
         addMissingNsPrefixMappings();
         addMissingPackageMappings();
 
+        File bindingsFile = new File(this.base, BINDING_AUGMENTATIONS_FILE);
+        if( !bindingsFile.exists() ){
+            LogHolder.getLog().warn("File '${base.canonicalPath}${File.separator}${BINDING_AUGMENTATIONS_FILE}' does not exist.  No additional bindings will be added.");
+        }else{
+            loadAdditionalBindings(bindingsFile);
+        }
     }
 
     /**
@@ -141,6 +151,52 @@ class IEPDDirectory {
 
     }//end addMissingNsPrefixMappings()
 
+    /**
+     * Simply returns true if that target namespace is found.
+     */
+    public boolean containsTargetNamespace(String ns){
+        return getSchemaInfoByNamespaceURI(ns) != null;
+    }
+    /**
+     * Returns the SchemaInfo associated with the given namespace URI.
+     */
+    public SchemaInfo getSchemaInfoByNamespaceURI(String ns){
+        SchemaInfo schema = null;
+        for( SchemaInfo si : this.schemas ?: []){
+            if( si.getTargetNamespace().equalsIgnoreCase(ns) ) {
+                schema = si;
+                break;
+            }
+        }
+        return schema;
+    }
+
+    /**
+     * Parses the given file as XML using DOM4j, then turns it into a Map of URI -> XML, which will be inserted later.
+     * <br/><br/>
+     * @param bindingsFile
+     */
+    private void loadAdditionalBindings(File bindingsFile){
+
+        SAXReader reader = new SAXReader();
+        Document doc = reader.read(bindingsFile);
+        Element root = doc.getRootElement();
+        root.addNamespace("gtri", "urn:org:gtri:niem:jaxb:1.0");
+        root.addNamespace("jaxb", "http://java.sun.com/xml/ns/jaxb");
+
+        List bindingElements = root.selectNodes("/gtri:bindingAugmentations/gtri:bindings");
+        if( bindingElements != null && bindingElements.size() > 0 ){
+            for( Element gtriBindingElement : bindingElements ){
+                String namespaceUri = gtriBindingElement.selectObject("string(./@targetNamespace)");
+                SchemaInfo schemaInfo = getSchemaInfoByNamespaceURI(namespaceUri);
+                List content = gtriBindingElement.selectNodes("./*[namespace-uri() = 'http://java.sun.com/xml/ns/jaxb']"); // Selects all children nodes with jaxb namespace.
+                if( content != null && content.size() > 0 )
+                    schemaInfo.addAdditionalJaxbBindings(content);
+            }
+        }else{
+            LogHolder.getLog().error("File ${BINDING_AUGMENTATIONS_FILE} did not contain any gtri:bindings elements.  Ignoring...");
+        }
+    }
 
     private void loadNsPrefixMappings(File file){
         LogHolder.getLog().debug("Reading namespace/prefix mapping file: "+NS_PREFIX_FILE);

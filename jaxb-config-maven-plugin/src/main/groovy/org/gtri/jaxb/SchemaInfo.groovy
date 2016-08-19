@@ -16,6 +16,7 @@ class SchemaInfo {
     File file;
     Map<String, String> uriToPrefixMappings = [:]
     Map<String, String> prefixToUriMappings = [:]
+    List additionalJaxbBindings = [];
 
     public SchemaInfo(File file){
         this.file = file;
@@ -47,6 +48,10 @@ class SchemaInfo {
                 }
             }
         }
+    }
+
+    public void addAdditionalJaxbBindings(List things){
+        this.additionalJaxbBindings.addAll(things);
     }
 
 

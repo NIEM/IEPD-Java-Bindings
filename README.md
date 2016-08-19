@@ -53,3 +53,58 @@ This is a **beta** release with known issues that limit its current capabilities
 XML Schemas have many different complexities that JAXB does not like.  As a result, some schemas won't translate properly
 to Java objects the way you intend.  Please provide feedback to us and we will attempt to create your scenario in our
 test IEPD in this project and update how our JAXB bindings are generated.
+
+
+### Customizing the Binding
+This project contains 3 files which allow you to customize how your project is created.  Please see each one for an example:
+
+1. **binding-augmentations.xml** - In this file, you can place additional jaxb:bindings which will be copied into the final bindings file.
+2. **ns-package-mappings.xml** - In this file, namespace URIs are mapped to package names.
+3. **ns-prefix-mappings.xml** - Use this file to map namespace URIs to "pretty" prefixes.
+
+#### Resolving "REST" errors
+When your project successfully creates java classes, the java-bindings project will read the source code and verify the
+files do not contain a "Rest" property.  This is JAXB's way of telling you something messed up, the most common reason
+being a name conflict.  The system will NOT allow you to continue if a rest property exists, and you will need to use the
+`binding-augmentations.xml` file to resolve it.  Here is an example of the output when a rest error occurs:
+
+`Failed tests:   testPropertyGeneration[TestJaxbGeneratedJava: niem/niem_core/v3/Association.java](org.gtri.niem.TestJaxbGeneratedJava): Class contains a 'rest' property, indicating a name conflict among other things`
+
+When this occurs, open that file.  In this case, it is `./target/generated-sources/jaxb/niem/niem_core/v3/Association.java`.  Inside,
+JAXB usually tells you in the javadoc comment why that property was selected.  In this case, it was:
+
+`    /**
+      * Gets the rest of the content model.
+      *
+      * <p>
+      * You are getting this "catch-all" property because of the following reason:
+      * The field name "AssociationAugmentationPoint" is used by two different parts of a schema. See:
+      * line 375 of file:/home/brad/workspace/niem/IEPD-Java-Bindings/java-bindings/src/main/xsd/niem-core/3.0/niem-core.xsd
+      * line 40 of file:/home/brad/workspace/niem/IEPD-Java-Bindings/java-bindings/src/main/xsd/structures/3.0/structures.xsd
+      * <p>
+      * To get rid of this property, apply a property customization to one
+      * of both of the following declarations to change their names:
+      * Gets the value of the rest property.
+      * ...
+`
+
+The problem is solved with this XML in the file:
+
+`
+<gtri:bindingAugmentations xmlns:gtri="urn:org:gtri:niem:jaxb:1.0" xmlns:jxb="http://java.sun.com/xml/ns/jaxb">
+
+    <gtri:bindings targetNamespace="http://release.niem.gov/niem/structures/3.0/">
+        <jxb:bindings node="//xsd:element[@name = 'AssociationAugmentationPoint']">
+            <jxb:property name="structuresAssociationAugmentationPoint" />
+        </jxb:bindings>
+    </gtri:bindings>
+
+    <gtri:bindings targetNamespace="http://release.niem.gov/niem/niem-core/3.0/">
+        <jxb:bindings node="//xsd:element[@name = 'AssociationAugmentationPoint']">
+            <jxb:property name="ncAssociationAugmentationPoint" />
+        </jxb:bindings>
+    </gtri:bindings>
+
+
+</gtri:bindingAugmentations>
+`
