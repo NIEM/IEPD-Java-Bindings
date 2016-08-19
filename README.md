@@ -73,7 +73,8 @@ being a name conflict.  The system will NOT allow you to continue if a rest prop
 When this occurs, open that file.  In this case, it is `./target/generated-sources/jaxb/niem/niem_core/v3/Association.java`.  Inside,
 JAXB usually tells you in the javadoc comment why that property was selected.  In this case, it was:
 
-`    /**
+```java
+    /**
       * Gets the rest of the content model.
       *
       * <p>
@@ -86,11 +87,12 @@ JAXB usually tells you in the javadoc comment why that property was selected.  I
       * of both of the following declarations to change their names:
       * Gets the value of the rest property.
       * ...
-`
+      */
+```
 
 The problem is solved with this XML in the file:
 
-`
+```xml
 <gtri:bindingAugmentations xmlns:gtri="urn:org:gtri:niem:jaxb:1.0" xmlns:jxb="http://java.sun.com/xml/ns/jaxb">
 
     <gtri:bindings targetNamespace="http://release.niem.gov/niem/structures/3.0/">
@@ -107,4 +109,4 @@ The problem is solved with this XML in the file:
 
 
 </gtri:bindingAugmentations>
-`
+```
