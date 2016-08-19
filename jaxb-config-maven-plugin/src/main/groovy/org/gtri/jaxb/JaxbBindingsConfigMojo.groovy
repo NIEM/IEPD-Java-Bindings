@@ -314,10 +314,12 @@ class JaxbBindingsConfigMojo extends AbstractMojo {
         getXsdDir().mkdirs();
         getResourcesDir().mkdirs();
 
-        for( String instanceXmlPath : this.instanceXmlPaths ?: []){
+        for( String instanceXmlPath : this.instanceXmlPaths ?: []) {
             getLog().debug("Checking if ${instanceXmlPath} does not exist...");
             File instanceXmlDir = getFile(instanceXmlPath);
-            if( instanceXmlDir != null && !this.overwritePluginOutput ){
+            if( instanceXmlDir == null ){
+                getLog().error("Could not find XML instance path: ${instanceXmlPath}")
+            }else if( instanceXmlDir != null && !this.overwritePluginOutput ) {
                 getLog().error("Unable to remove directory ${instanceXmlDir.canonicalPath}, since 'overwritePluginOutput' is set to false.");
                 throw new RuntimeException("Unable to remove directory ${instanceXmlDir.canonicalPath}, since 'overwritePluginOutput' is set to false.")
             }else if( instanceXmlDir?.exists() ) {

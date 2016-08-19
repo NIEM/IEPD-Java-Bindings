@@ -1,0 +1,112 @@
+<!--
+  This file was graciously donated by Jim Cabral, http://www.mtgmc.com/our-people/james-e-cabral-jr
+
+  NOTE: This file has not yet been incorporated.  Currently, GML is not present in this subset.  Instead, anywhere it
+  would be used, an xsd:any has been inserted.
+-->
+
+
+<!--This file fixes a number of overlapping definitions in the NIEM 3.2 to allow JAXB.  
+    Note that the import of "xlinks.xsd" in niem\external\have\1.0\gml-oasis.xsd should be updated with the following schema location:
+    "../../ogc/xlink/1.0.0/xlinks.xsd" and -niem\external\have\1.0\gml-oasis.xsd/xlinks.xsd should be deleted -->
+<jxb:bindings version="2.1" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb">
+	<jxb:globalBindings typesafeEnumMaxMembers="3000"/>
+	<jxb:bindings schemaLocation="../../xml/niem-3.2/niem/external/ogc/gml/3.2.1/geometryPrimitives.xsd">
+		<jxb:bindings node="//xs:attribute[@name='rows']">
+			<jxb:property name="rowsAttribute"/>
+		</jxb:bindings>
+	</jxb:bindings>
+	<jxb:bindings schemaLocation="../../xml/niem-3.2/niem/external/have/1.0/xNL.xsd">
+		<jxb:bindings node="//xs:attribute[@name='Type'][@type='PersonNameTypeList']">
+			<jxb:property name="PersonNameTypeListType"/>
+		</jxb:bindings>
+		<jxb:bindings node="//xs:attribute[@name='Type'][@type='SubDivisionTypeList']">
+			<jxb:property name="SubDivisionTypeListType"/>
+		</jxb:bindings>
+		<jxb:bindings node="//xs:attribute[@name='Type'][@type='OrganisationNameTypeList']">
+			<jxb:property name="OrganisationNameTypeListType"/>
+		</jxb:bindings>
+		<jxb:bindings node="//xs:attribute[@name='Type'][@type='NameLineTypeList']">
+			<jxb:property name="NameLineTypeListType"/>
+		</jxb:bindings>
+	</jxb:bindings>
+	<jxb:bindings schemaLocation="../../xml/niem-3.2/niem/external/have/1.0/xAL.xsd">
+		<jxb:bindings node="//xs:attribute[@name='Type'][@type='AddressTypeList']">
+			<jxb:property name="AddressTypeListType"/>
+		</jxb:bindings>
+	</jxb:bindings>
+	<jxb:bindings schemaLocation="../../xml/niem-3.2/niem/external/ogc/gml/3.2.1/datums.xsd">
+		<jxb:bindings node="//xs:element[@name='secondDefiningParameter']">
+			<jxb:class name="secondDefiningParameter2"/>
+		</jxb:bindings>
+		<jxb:bindings node="//xs:element[@name='primeMeridian']">
+			<jxb:class name="primeMeridian2"/>
+		</jxb:bindings>
+		<jxb:bindings node="//xs:element[@name='ellipsoid']">
+			<jxb:class name="ellipsoid2"/>
+		</jxb:bindings>
+	</jxb:bindings>
+	<jxb:bindings schemaLocation="../../xml/niem-3.2/niem/external/ogc/gml/3.2.1/coordinateReferenceSystems.xsd">
+		<jxb:bindings node="//xs:element[@name='temporalDatum']">
+			<jxb:class name="temporalDatumReference"/>
+		</jxb:bindings>
+		<jxb:bindings node="//xs:element[@name='imageDatum']">
+			<jxb:class name="imageDatumReference"/>
+		</jxb:bindings>
+		<jxb:bindings node="//xs:element[@name='cartesianCS']">
+			<jxb:class name="cartesianCSReference"/>
+		</jxb:bindings>
+		<jxb:bindings node="//xs:element[@name='polarCS']">
+			<jxb:class name="polarCSReference"/>
+		</jxb:bindings>
+		<jxb:bindings node="//xs:element[@name='verticalCS']">
+			<jxb:class name="verticalCSReference"/>
+		</jxb:bindings>
+		<jxb:bindings node="//xs:element[@name='ellipsoidalCS']">
+			<jxb:class name="ellipsoidalCSReference"/>
+		</jxb:bindings>
+		<jxb:bindings node="//xs:element[@name='linearCS']">
+			<jxb:class name="linearCSReference"/>
+		</jxb:bindings>
+		<jxb:bindings node="//xs:element[@name='cylindricalCS']">
+			<jxb:class name="cylindricalCSReference"/>
+		</jxb:bindings>
+		<jxb:bindings node="//xs:element[@name='verticalDatum']">
+			<jxb:class name="verticalDatumReference"/>
+		</jxb:bindings>
+		<jxb:bindings node="//xs:element[@name='geodeticDatum']">
+			<jxb:class name="geodeticDatumReference"/>
+		</jxb:bindings>
+		<jxb:bindings node="//xs:element[@name='conversion']">
+			<jxb:class name="conversionReference"/>
+		</jxb:bindings>
+		<jxb:bindings node="//xs:element[@name='sphericalCS']">
+			<jxb:class name="sphericalCSReference"/>
+		</jxb:bindings>
+		<jxb:bindings node="//xs:element[@name='affineCS']">
+			<jxb:class name="affineCSReference"/>
+		</jxb:bindings>
+		<jxb:bindings node="//xs:element[@name='timeCS']">
+			<jxb:class name="timeCSReference"/>
+		</jxb:bindings>
+		<jxb:bindings node="//xs:element[@name='engineeringDatum']">
+			<jxb:class name="engineeringDatumReference"/>
+		</jxb:bindings>
+		<jxb:bindings node="//xs:element[@name='userDefinedCS']">
+			<jxb:class name="userDefinedCSReference"/>
+		</jxb:bindings>
+	</jxb:bindings>
+	<jxb:bindings schemaLocation="../../xml/niem-3.2/niem/external/ogc/gml/3.2.1/coordinateOperations.xsd">
+		<jxb:bindings node="//xs:element[@name='operationParameter']">
+			<jxb:class name="operationParameter2"/>
+		</jxb:bindings>
+		<jxb:bindings node="//xs:element[@name='parameterValue']">
+			<jxb:class name="parameterValue2"/>
+		</jxb:bindings>
+	</jxb:bindings>
+	<jxb:bindings schemaLocation="../../xml/niem-3.2/niem/external/have/1.0/gml-oasis.xsd">
+		<jxb:bindings node="//xs:element[@name='Curve']">
+			<jxb:class name="Curve2"/>
+		</jxb:bindings>
+	</jxb:bindings>
+</jxb:bindings>
