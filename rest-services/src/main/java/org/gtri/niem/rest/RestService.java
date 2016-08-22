@@ -8,12 +8,18 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.transform.stream.StreamSource;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
+import org.w3c.dom.Document;
+
 
 @Path("sample")
 public class RestService {
@@ -50,7 +56,7 @@ public class RestService {
   @GET
   @Path("/random/{id}")
   @Produces(MediaType.APPLICATION_XML)
-  public JAXBElement getRandomExample(@PathParam("id") int id) {
+  public Document getRandomExample(@PathParam("id") int id) {
     info("Successfully called getRandomExample("+id+")");
     // TODO In theory, giving the same id should generate the same result, not different ones.
     List<String> potentialClasses = JaxbHelper.getNonNIEMClassNames();
@@ -59,15 +65,32 @@ public class RestService {
       throw new UnsupportedOperationException("No potential classes to serve.  This service only works when 'NIEM' is not found in a class name.");
     }
     String className = potentialClasses.get(random.nextInt(potentialClasses.size()));
-    info("  Creating sample Class: "+className);
     try {
+      info("  Creating sample Class: "+className);
       Class clz = Class.forName(className);
+      info("  Generating random data for: "+clz.getSimpleName());
       Object instance = EnhancedRandom.random(clz);
+
+      info("  Finding object factory, and constructing JAXBElement...");
       String objectFactoryClassName = clz.getPackage().getName() + ".ObjectFactory";
       Class objectFactoryClz = Class.forName(objectFactoryClassName);
       Method staticCreateMethod = objectFactoryClz.getMethod("create"+(clz.getSimpleName().replace("Type", "")), clz);
 
-      return (JAXBElement) staticCreateMethod.invoke(objectFactoryClz.newInstance(), instance);
+      info("  Constructing JAXB Element around: "+objectFactoryClz.getName()+", instance: "+instance);
+      JAXBElement jaxbe = (JAXBElement) staticCreateMethod.invoke(objectFactoryClz.newInstance(), instance);
+
+      info("  Creating JAXB Marshaller...");
+      Marshaller m = JaxbHelper.createMarshaller();
+
+      info("  Marshalling to w3c Document");
+      DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+      dbf.setNamespaceAware(true);
+      DocumentBuilder db = dbf.newDocumentBuilder();
+      Document doc = db.newDocument();
+      m.marshal( jaxbe, doc );
+
+      info("  Returning XML...");
+      return doc;
     }catch(Throwable t){
       t.printStackTrace(System.err);
       throw new RuntimeException("An unexpected error occurred.", t);

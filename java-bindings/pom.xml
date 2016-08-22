@@ -15,8 +15,46 @@
     <version>0.3-SNAPSHOT</version>
   </parent>
 
+
+  <properties>
+    <!-- TODO: Update this file with the location of your IEPD, relative to this project. -->
+    <!--<iepd.dir>../iepd-source</iepd.dir>-->
+    <iepd.dir>../niem-3.2</iepd.dir>
+
+  </properties>
+
   <build>
     <plugins>
+
+      <!-- Prepares this JAXB project from the IEPD directory. -->
+      <plugin>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>jaxb-config-maven-plugin</artifactId>
+        <version>${project.version}</version>
+        <executions>
+          <execution>
+            <id>Build JAXB Config</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>jaxbGenerateConfig</goal>
+            </goals>
+            <configuration>
+              <iepdDirPath>${iepd.dir}</iepdDirPath>
+              <overwritePluginOutput>true</overwritePluginOutput>
+              <outputPath>./src/main</outputPath>
+              <instanceXmlPaths>
+                <instanceXmlPath>./src/test/resources/xml</instanceXmlPath>
+              </instanceXmlPaths>
+              <jaxbBindingFiles>
+                <!-- TODO: Have binding files?  Add them here -->
+                <jaxbBindingFile>${iepd.dir}/my-bindings.xjb</jaxbBindingFile>
+              </jaxbBindingFiles>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+
       <!-- using jaxb plugin to generate java classes from xsd files -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>

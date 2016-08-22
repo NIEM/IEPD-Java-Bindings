@@ -35,7 +35,7 @@
             <xs:extension base="structures:ObjectType">
                 <xs:sequence>
                     <xs:element ref="nc:DateTime"/>
-                    <xs:element ref="nc:Person"/>
+                    <xs:element ref="nc:WeaponUsageText"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>

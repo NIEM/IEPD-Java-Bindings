@@ -39,15 +39,14 @@ class JaxbBindingsConfigMojo extends AbstractMojo {
      * Where (relative to this project) the prepared files will go, ready to be compiled by XJC.
      */
     @Parameter
-    private String outputPath = "../java-bindings/src/main"
+    private String outputPath = "./src/main"
 
     /**
      * Where (relative to this project) the XML instances for testing will go.
      */
     @Parameter
     private String[] instanceXmlPaths = [
-            "../java-bindings/src/test/resources/xml",
-            "../rest-services/src/test/resources/xml"
+            "./src/test/resources/xml"
     ] as String[];
 
 
