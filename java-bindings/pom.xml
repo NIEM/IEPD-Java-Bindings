@@ -28,9 +28,10 @@
 
       <!-- Prepares this JAXB project from the IEPD directory. -->
       <plugin>
-        <groupId>${project.groupId}</groupId>
+        <groupId>org.gtri.niem</groupId>
         <artifactId>jaxb-config-maven-plugin</artifactId>
-        <version>${project.version}</version>
+        <version>1.0-SNAPSHOT</version>
+
         <executions>
           <execution>
             <id>Build JAXB Config</id>
