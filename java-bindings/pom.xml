@@ -15,8 +15,47 @@
     <version>0.3-SNAPSHOT</version>
   </parent>
 
+
+  <properties>
+    <!-- TODO: Update this file with the location of your IEPD, relative to this project. -->
+    <!--<iepd.dir>../iepd-source</iepd.dir>-->
+    <iepd.dir>../niem-3.2</iepd.dir>
+
+  </properties>
+
   <build>
     <plugins>
+
+      <!-- Prepares this JAXB project from the IEPD directory. -->
+      <plugin>
+        <groupId>org.gtri.niem</groupId>
+        <artifactId>jaxb-config-maven-plugin</artifactId>
+        <version>1.0-SNAPSHOT</version>
+
+        <executions>
+          <execution>
+            <id>Build JAXB Config</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>jaxbGenerateConfig</goal>
+            </goals>
+            <configuration>
+              <iepdDirPath>${iepd.dir}</iepdDirPath>
+              <overwritePluginOutput>true</overwritePluginOutput>
+              <outputPath>./src/main</outputPath>
+              <instanceXmlPaths>
+                <instanceXmlPath>./src/test/resources/xml</instanceXmlPath>
+              </instanceXmlPaths>
+              <jaxbBindingFiles>
+                <!-- TODO: Have binding files?  Add them here -->
+                <jaxbBindingFile>${iepd.dir}/my-bindings.xjb</jaxbBindingFile>
+              </jaxbBindingFiles>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+
       <!-- using jaxb plugin to generate java classes from xsd files -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -39,6 +78,20 @@
         </configuration>
       </plugin>
 
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>3.0.1</version>
+        <configuration>
+          <outputDirectory>${basedir}/../</outputDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <id>copy-sources</id>
+            <goals><goal>jar</goal></goals>
+          </execution>
+        </executions>
+      </plugin>
 
       <plugin>
         <groupId>org.codehaus.gmaven</groupId>
@@ -56,11 +109,15 @@
                 outFile.getParentFile().mkdirs();
                 File helperJavaFile = new File(basedir, "./src/config/JaxbHelper.java");
 
+                if( outFile.exists() )
+                  outFile.delete();
+
                 Files.copy(helperJavaFile.canonicalFile.toPath(), outFile.canonicalFile.toPath());
               </source>
             </configuration>
           </execution>
           <execution>
+            <id>Generate-jaxb_config</id>
             <phase>compile</phase>
             <goals><goal>execute</goal></goals>
             <configuration>
@@ -117,6 +174,23 @@
               </source>
             </configuration>
           </execution>
+          <execution>
+            <id>Copy-jar</id>
+            <phase>install</phase>
+            <goals><goal>execute</goal></goals>
+            <configuration>
+              <source>
+                import java.nio.file.Files
+
+                File jarfile = new File(basedir, "./target/${project.build.finalName}.jar");
+                File bindingsJar = new File(basedir, "../${project.build.finalName}.jar");
+                if( bindingsJar.exists() )
+                    bindingsJar.delete();
+
+                Files.copy(jarfile.canonicalFile.toPath(), bindingsJar.canonicalFile.toPath());
+              </source>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
 
@@ -156,7 +230,17 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>xml-randomizer</artifactId>
       <version>${project.version}</version>
+      <scope>test</scope>
     </dependency>
+
+    <!-- Parses java 1.8 code to find problems in the generated sources -->
+    <dependency>
+      <groupId>com.github.javaparser</groupId>
+      <artifactId>javaparser-core</artifactId>
+      <version>2.5.1</version>
+      <scope>test</scope>
+    </dependency>
+
 
   </dependencies>
 

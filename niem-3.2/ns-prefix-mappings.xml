@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+
+<!--
+  This file provides the JAXB compiler with information used to build a "package-info.java" file, useful for telling
+  JAXB how to write your schemas out with appropriate namespace prefixes (instead of "ns1", "ns2", etc).  If you don't
+  specify any values here, then the plugin will read them from the XSD files in this IEPD.
+-->
+<namespacePrefixMappings>
+
+    <!-- Generated from the warning output of the plugin. -->
+    <mapping prefix="aamva_d20" uri="http://release.niem.gov/niem/codes/aamva_d20/3.2/" />
+    <mapping prefix="apco" uri="http://release.niem.gov/niem/codes/apco_event/3.0/" />
+    <mapping prefix="appinfo" uri="http://release.niem.gov/niem/appinfo/3.0/" />
+    <mapping prefix="atf" uri="http://release.niem.gov/niem/codes/atf/3.0/" />
+    <mapping prefix="biom" uri="http://release.niem.gov/niem/domains/biometrics/3.2/" />
+    <mapping prefix="can" uri="http://release.niem.gov/niem/codes/canada_post/3.0/" />
+    <mapping prefix="cap" uri="urn:oasis:names:tc:emergency:cap:1.1" />
+    <mapping prefix="cbrncl" uri="http://release.niem.gov/niem/codes/cbrncl/3.0/" />
+    <mapping prefix="cbrn" uri="http://release.niem.gov/niem/domains/cbrn/3.2/" />
+    <mapping prefix="census-3.0.1" uri="http://publication.niem.gov/niem/codes/census_uscounty/3.0/1/" />
+    <mapping prefix="census" uri="http://release.niem.gov/niem/codes/census_uscounty/3.0/" />
+    <mapping prefix="commodity" uri="http://release.niem.gov/niem/codes/census_commodity/3.0/" />
+    <mapping prefix="core_misc" uri="http://release.niem.gov/niem/codes/core_misc/3.0/" />
+    <mapping prefix="ct" uri="http://release.niem.gov/niem/conformanceTargets/3.0/" />
+    <mapping prefix="cyfs" uri="http://release.niem.gov/niem/domains/cyfs/3.2/" />
+    <mapping prefix="dea-3.0.1" uri="http://publication.niem.gov/niem/codes/dea_ctlsub/3.0/1/" />
+    <mapping prefix="dea-3.0.2" uri="http://publication.niem.gov/niem/codes/dea_ctlsub/3.0/2/" />
+    <mapping prefix="dea" uri="http://release.niem.gov/niem/codes/dea_ctlsub/3.0/" />
+    <mapping prefix="de" uri="urn:oasis:names:tc:emergency:EDXL:DE:1.0" />
+    <mapping prefix="dod_jcs-pub2.0-3.0.1" uri="http://publication.niem.gov/niem/codes/dod_jcs-pub2.0/3.0/1/" />
+    <mapping prefix="dod_jcs-pub2.0" uri="http://release.niem.gov/niem/codes/dod_jcs-pub2.0/3.0/" />
+    <mapping prefix="dol" uri="http://release.niem.gov/niem/codes/dol_soc/3.0/" />
+    <mapping prefix="edxl-cap" uri="http://release.niem.gov/niem/adapters/edxl-cap/3.0/" />
+    <mapping prefix="edxl-de" uri="http://release.niem.gov/niem/adapters/edxl-de/3.0/" />
+    <mapping prefix="edxl-have" uri="http://release.niem.gov/niem/adapters/edxl-have/3.0/" />
+    <mapping prefix="edxl_rm" uri="http://release.niem.gov/niem/codes/edxl_rm/3.0/" />
+    <mapping prefix="em" uri="http://release.niem.gov/niem/domains/emergencyManagement/3.2/" />
+    <mapping prefix="fips_10-4" uri="http://release.niem.gov/niem/codes/fips_10-4/3.0/" />
+    <mapping prefix="fips_5-2" uri="http://release.niem.gov/niem/codes/fips_5-2/3.0/" />
+    <mapping prefix="fips_6-4" uri="http://release.niem.gov/niem/codes/fips_6-4/3.0/" />
+    <mapping prefix="genc-3.0.1" uri="http://publication.niem.gov/niem/codes/nga_genc/3.0/1/" />
+    <mapping prefix="genc" uri="http://release.niem.gov/niem/codes/nga_genc/3.0/" />
+    <mapping prefix="geo" uri="http://release.niem.gov/niem/adapters/geospatial/3.0/" />
+    <mapping prefix="gml" uri="http://www.opengis.net/gml/3.2" />
+    <mapping prefix="have-codes" uri="http://release.niem.gov/niem/codes/edxl_have/3.0/" />
+    <mapping prefix="have" uri="urn:oasis:names:tc:emergency:EDXL:HAVE:1.0" />
+    <mapping prefix="hazmat-3.0.1" uri="http://publication.niem.gov/niem/codes/dot_hazmat/3.0/1/" />
+    <mapping prefix="hazmat" uri="http://release.niem.gov/niem/codes/dot_hazmat/3.0/" />
+    <mapping prefix="hl7" uri="http://release.niem.gov/niem/codes/hl7/3.0/" />
+    <mapping prefix="hs" uri="http://release.niem.gov/niem/domains/humanServices/3.2/" />
+    <mapping prefix="im" uri="http://release.niem.gov/niem/domains/immigration/3.2/" />
+    <mapping prefix="intel" uri="http://release.niem.gov/niem/domains/intelligence/3.2/" />
+    <mapping prefix="ip" uri="http://release.niem.gov/niem/domains/infrastructureProtection/3.0/" />
+    <mapping prefix="iso_3166" uri="http://release.niem.gov/niem/codes/iso_3166-1/3.0/" />
+    <mapping prefix="iso_4217" uri="http://release.niem.gov/niem/codes/iso_4217/3.0/" />
+    <mapping prefix="iso_639-3" uri="http://release.niem.gov/niem/codes/iso_639-3/3.0/" />
+    <mapping prefix="itcodes" uri="http://release.niem.gov/niem/codes/it_codes/3.0/" />
+    <mapping prefix="it" uri="http://release.niem.gov/niem/domains/internationalTrade/3.2/" />
+    <mapping prefix="jc3iedm" uri="http://release.niem.gov/niem/codes/jc3iedm/3.1/" />
+    <mapping prefix="jp3-52" uri="http://release.niem.gov/niem/codes/jp3-52/3.1/" />
+    <mapping prefix="j" uri="http://release.niem.gov/niem/domains/jxdm/5.2/" />
+    <mapping prefix="mmucc" uri="http://release.niem.gov/niem/codes/mmucc/3.2/" />
+    <mapping prefix="mo" uri="http://release.niem.gov/niem/domains/militaryOperations/3.2/" />
+    <mapping prefix="m" uri="http://release.niem.gov/niem/domains/maritime/3.2/" />
+    <mapping prefix="nc-3.0.1" uri="http://publication.niem.gov/niem/niem-core/3.0/1/" />
+    <mapping prefix="nc-3.0.2" uri="http://publication.niem.gov/niem/niem-core/3.0/2/" />
+    <mapping prefix="nc-3.0.3" uri="http://publication.niem.gov/niem/niem-core/3.0/3/" />
+    <mapping prefix="ncic" uri="http://release.niem.gov/niem/codes/fbi_ncic/3.2/" />
+    <mapping prefix="nc" uri="http://release.niem.gov/niem/niem-core/3.0/" />
+    <mapping prefix="ndex" uri="http://release.niem.gov/niem/codes/fbi_ndex/3.1/" />
+    <mapping prefix="nga" uri="http://release.niem.gov/niem/codes/nga_datum/3.0/" />
+    <mapping prefix="niem-xs" uri="http://release.niem.gov/niem/proxy/xsd/3.0/" />
+    <mapping prefix="nlets" uri="http://release.niem.gov/niem/codes/nlets/3.0/" />
+    <mapping prefix="occs" uri="http://release.niem.gov/niem/codes/occs_facility/3.0/" />
+    <mapping prefix="sar" uri="http://release.niem.gov/niem/codes/pmise_sar/3.0/" />
+    <mapping prefix="scr" uri="http://release.niem.gov/niem/domains/screening/3.2/" />
+    <mapping prefix="structures" uri="http://release.niem.gov/niem/structures/3.0/" />
+    <mapping prefix="st" uri="http://release.niem.gov/niem/domains/surfaceTransportation/3.2/" />
+    <mapping prefix="term" uri="http://release.niem.gov/niem/localTerminology/3.0/" />
+    <mapping prefix="ucr" uri="http://release.niem.gov/niem/codes/fbi_ucr/3.2/" />
+    <mapping prefix="unece" uri="http://release.niem.gov/niem/codes/unece_rec20/3.0/" />
+    <mapping prefix="usps-3.0.1" uri="http://publication.niem.gov/niem/codes/usps_states/3.0/1/" />
+    <mapping prefix="usps" uri="http://release.niem.gov/niem/codes/usps_states/3.0/" />
+    <mapping prefix="xCard" uri="http://release.niem.gov/niem/codes/xCard/3.0/" />
+    <mapping prefix="xls" uri="http://release.niem.gov/niem/external/ogc/xls/1.1.0/dhs-gmo/2.1.0" />
+    <mapping prefix="xsi" uri="http://www.w3.org/2001/XMLSchema-instance" />
+    <mapping prefix="xs" uri="http://www.w3.org/2001/XMLSchema" />
+
+    <mapping prefix="xhtml" uri="http://www.w3.org/1999/xhtml" />
+    <mapping prefix="xlink" uri="http://www.w3.org/1999/xlink" />
+
+
+</namespacePrefixMappings>

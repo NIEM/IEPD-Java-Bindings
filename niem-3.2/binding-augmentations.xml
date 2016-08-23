@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+
+<!--
+    What is this file?
+       The binding augmentations file allows you to add additional customizations to generated jaxb bindings, based
+       on the schema URI (as opposed to the xsd file location).
+
+    How does it work?
+       Each schema file should have a single "targetNamespace" URI, which is distinct (this is a JAXB requirement).
+       Simply insert that value, and when the JAXB bindings file is generated, the content you place under that gtri:bindings
+       element will be inserted into that file's bindings node.
+-->
+<gtri:bindingAugmentations xmlns:gtri="urn:org:gtri:niem:jaxb:1.0" xmlns:jxb="http://java.sun.com/xml/ns/jaxb">
+
+    <gtri:bindings targetNamespace="http://release.niem.gov/niem/domains/cbrn/3.2/">
+        <jxb:bindings node="//xsd:element[@name = 'ConveyanceRegistrationAugmentationPoint']">
+            <jxb:property name="crbnConveyanceRegistrationAugmentationPoint" />
+        </jxb:bindings>
+    </gtri:bindings>
+
+    <gtri:bindings targetNamespace="http://release.niem.gov/niem/domains/jxdm/5.2/">
+        <jxb:bindings node="//xsd:element[@name = 'ConveyanceRegistrationAugmentationPoint']">
+            <jxb:property name="jxdmConveyanceRegistrationAugmentationPoint" />
+        </jxb:bindings>
+
+        <jxb:bindings node="//xsd:element[@name = 'PermitAugmentationPoint']">
+            <jxb:property name="jxdmPermitAugmentationPoint" />
+        </jxb:bindings>
+
+    </gtri:bindings>
+
+
+    <gtri:bindings targetNamespace="http://release.niem.gov/niem/structures/3.0/">
+        <jxb:bindings node="//xsd:element[@name = 'AssociationAugmentationPoint']">
+            <jxb:property name="structuresAssociationAugmentationPoint" />
+        </jxb:bindings>
+    </gtri:bindings>
+
+    <gtri:bindings targetNamespace="http://release.niem.gov/niem/niem-core/3.0/">
+        <jxb:bindings node="//xsd:element[@name = 'AssociationAugmentationPoint']">
+            <jxb:property name="ncAssociationAugmentationPoint" />
+        </jxb:bindings>
+
+        <jxb:bindings node="//xsd:element[@name = 'ImageAugmentationPoint']">
+            <jxb:property name="ncImageAugmentationPoint" />
+        </jxb:bindings>
+
+    </gtri:bindings>
+
+
+    <gtri:bindings targetNamespace="http://release.niem.gov/niem/domains/biometrics/3.2/">
+        <jxb:bindings node="//xsd:element[@name = 'ImageAugmentationPoint']">
+            <jxb:property name="biomImageAugmentationPoint" />
+        </jxb:bindings>
+    </gtri:bindings>
+
+
+    <gtri:bindings targetNamespace="http://release.niem.gov/niem/domains/emergencyManagement/3.2/">
+        <jxb:bindings node="//xsd:element[@name = 'PermitAugmentationPoint']">
+            <jxb:property name="emPermitAugmentationPoint" />
+        </jxb:bindings>
+    </gtri:bindings>
+
+
+
+</gtri:bindingAugmentations>

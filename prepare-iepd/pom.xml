@@ -19,46 +19,11 @@
     </parent>
 
 
-    <properties>
-        <!-- TODO: Modify this value if you wish to use a different IEPD source directory, other than the default -->
-        <iepd.dir>../iepd-source</iepd.dir>
-
-    </properties>
-
-    <dependencies>
-
-    </dependencies>
-
     <build>
         <plugins>
 
-            <plugin>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>jaxb-config-maven-plugin</artifactId>
-                <version>${project.version}</version>
-                <executions>
-                    <execution>
-                        <id>Build JAXB Config</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>jaxbGenerateConfig</goal>
-                        </goals>
-                        <configuration>
-                            <iepdDirPath>${iepd.dir}</iepdDirPath>
-                            <overwritePluginOutput>true</overwritePluginOutput>
-                            <outputPath>../java-bindings/src/main</outputPath>
-                            <instanceXmlPaths>
-                                <instanceXmlPath>../java-bindings/src/test/resources/xml</instanceXmlPath>
-                                <instanceXmlPath>../rest-services/src/test/resources/xml</instanceXmlPath>
-                            </instanceXmlPaths>
-                            <jaxbBindingFiles>
-                                <jaxbBindingFile>${iepd.dir}/my-bindings.xjb</jaxbBindingFile>
-                            </jaxbBindingFiles>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
 
         </plugins>
     </build>
+
 </project>
