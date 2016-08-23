@@ -69,5 +69,11 @@
         </repository>
     </repositories>
 
+  <pluginRepositories>
+    <pluginRepository>
+            <id>gtri-public</id>
+            <url>https://maven.gtri.gatech.edu/repos/public</url>
+    </pluginRepository>
+  </pluginRepositories>
 
 </project>
