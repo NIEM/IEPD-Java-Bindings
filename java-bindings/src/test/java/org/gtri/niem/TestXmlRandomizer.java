@@ -59,13 +59,13 @@ public class TestXmlRandomizer extends AbstractTest {
             Object instance = EnhancedRandom.random(clz);
             assertThat(instance, notNullValue());
 
-            // TODO Any other?
+            // TODO Any other assertions?
 
         }catch(Throwable t){
             logger.error("An unexpected error occurred.", t);
             Assert.fail("Unexpected error using randomizer: "+t.toString());
         }
 
-    }//test Randomizatn()
+    }//test testRandomization()
 
 }

@@ -1,10 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.gtri.niem</groupId>
-  <artifactId>java-bindings-reactor</artifactId>
-  <version>0.3-SNAPSHOT</version>
-  <packaging>pom</packaging>
+    <groupId>org.gtri.niem</groupId>
+    <artifactId>java-bindings-reactor</artifactId>
+    <version>0.3-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
 
     <parent>
@@ -14,52 +15,47 @@
     </parent>
 
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
+        <timestamp>${maven.build.timestamp}</timestamp>
 
-    <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
-    <timestamp>${maven.build.timestamp}</timestamp>
+        <groovyVersion>2.2.1</groovyVersion>
 
-    <gmavenVersion>1.5</gmavenVersion>
-    <gmavenProviderSelection>2.0</gmavenProviderSelection>
-    <groovyVersion>2.2.1</groovyVersion>
+    </properties>
 
-  </properties>
+    <dependencies>
 
-  <dependencies>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+            <scope>test</scope>
+        </dependency>
 
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.17</version>
-      <scope>test</scope>
-    </dependency>
-
-  </dependencies>
+    </dependencies>
 
 
-  <build>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.5.1</version>
-          <configuration>
-            <source>1.8</source>
-            <target>1.8</target>
-          </configuration>
-        </plugin>
-      </plugins>
-  </build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
-  <modules>
-    <module>xml-randomizer</module>
-    <module>java-bindings</module>
-    <module>rest-services</module>
-  </modules>
-
-
+    <modules>
+        <module>xml-randomizer</module>
+        <module>java-bindings</module>
+        <module>rest-services</module>
+    </modules>
 
 
     <repositories>
@@ -69,11 +65,11 @@
         </repository>
     </repositories>
 
-  <pluginRepositories>
-    <pluginRepository>
+    <pluginRepositories>
+        <pluginRepository>
             <id>gtri-public</id>
             <url>https://maven.gtri.gatech.edu/repos/public</url>
-    </pluginRepository>
-  </pluginRepositories>
+        </pluginRepository>
+    </pluginRepositories>
 
 </project>
