@@ -23,7 +23,12 @@ public class Main {
         logger.info("Starting the Grizzly server...");
         // create a resource config that scans for JAX-RS resources and providers
         // in com.example package
-        final ResourceConfig rc = new ResourceConfig().packages("org.gtri.niem.rest");
+        ResourceConfig rc = null;
+        try{
+            rc = new ResourceConfig().packages(RestServices.readServicePackages());
+        }catch(Throwable t){
+            throw new RuntimeException("Cannot read service packages!", t);
+        }
 
         // create and start a new instance of grizzly http server
         // exposing the Jersey application at BASE_URI

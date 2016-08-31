@@ -13,6 +13,14 @@
         <version>0.3-SNAPSHOT</version>
     </parent>
 
+    <properties>
+        <!-- TODO: Update this file with the location of your IEPD, relative to this project. -->
+        <!--<iepd.dir>../iepd-source</iepd.dir>-->
+        <iepd.dir>../niem-3.2</iepd.dir>
+
+    </properties>
+
+
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.glassfish.jersey.containers/jersey-container-grizzly2-http -->
         <dependency>
@@ -69,6 +77,51 @@
         </dependency>
 
     </dependencies>
+
+
+
+    <build>
+
+        <plugins>
+            <plugin>
+                <groupId>org.gtri.niem</groupId>
+                <artifactId>jersey-config-maven-plugin</artifactId>
+                <version>1.0-SNAPSHOT</version>
+
+
+                <executions>
+                    <execution>
+                        <id>generate-rest-services</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>jerseyServiceGeneration</goal>
+                        </goals>
+                        <configuration>
+                            <iepdDirPath>${iepd.dir}</iepdDirPath>
+                            <overwritePluginOutput>true</overwritePluginOutput>
+                            <outputPath>./src/main</outputPath>
+                        </configuration>
+                    </execution>
+                </executions>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.groovy</groupId>
+                        <artifactId>groovy-all</artifactId>
+                        <version>2.4.0</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>ant</groupId>
+                        <artifactId>ant</artifactId>
+                        <version>1.7.0</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+
+        </plugins>
+
+    </build>
 
 
 </project>

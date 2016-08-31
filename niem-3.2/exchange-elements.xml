@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-
-<exchange-elements>
-    <exchange-element uri="http://example.com/template/1.0/" name="TemplateExchange" />
-</exchange-elements>
