@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<!--
+  This file provides the GTRI plugins with information on which Types should be tested and services generated for.
+  Note that you should use a type, since JAXB generates classes based on type.
+-->
+<exchange-types>
+
+    <type name="TemplateExchangeType" uri="http://example.com/template/1.0/" />
+
+</exchange-types>

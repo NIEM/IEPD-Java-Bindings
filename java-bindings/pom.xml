@@ -1,247 +1,186 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>jaxb-bindings</artifactId>
+    <artifactId>jaxb-bindings</artifactId>
 
-  <name>JAXB Bindings</name>
-  <description>
-    This project is responsible for running JAXB to generate the Java classes which will work with your IEPD.  It will
-    also run XML Files end-to-end as tests, which are found in the IEPD.
-  </description>
+    <name>JAXB Bindings</name>
+    <description>
+        This project is responsible for running JAXB to generate the Java classes which will work with your IEPD. It
+        will also run XML Files end-to-end as tests, which are found in the IEPD.
+    </description>
 
-  <parent>
-    <groupId>org.gtri.niem</groupId>
-    <artifactId>java-bindings-reactor</artifactId>
-    <version>0.3-SNAPSHOT</version>
-  </parent>
-
-
-  <properties>
-    <!-- TODO: Update this file with the location of your IEPD, relative to this project. -->
-    <!--<iepd.dir>../iepd-source</iepd.dir>-->
-    <iepd.dir>../niem-3.2</iepd.dir>
-
-  </properties>
-
-  <build>
-    <plugins>
-
-      <!-- Prepares this JAXB project from the IEPD directory. -->
-      <plugin>
+    <parent>
         <groupId>org.gtri.niem</groupId>
-        <artifactId>jaxb-config-maven-plugin</artifactId>
-        <version>1.0-SNAPSHOT</version>
-
-        <executions>
-          <execution>
-            <id>Build JAXB Config</id>
-            <phase>initialize</phase>
-            <goals>
-              <goal>jaxbGenerateConfig</goal>
-            </goals>
-            <configuration>
-              <iepdDirPath>${iepd.dir}</iepdDirPath>
-              <overwritePluginOutput>true</overwritePluginOutput>
-              <outputPath>./src/main</outputPath>
-              <instanceXmlPaths>
-                <instanceXmlPath>./src/test/resources/xml</instanceXmlPath>
-              </instanceXmlPaths>
-              <jaxbBindingFiles>
-                <!-- TODO: Have binding files?  Add them here -->
-                <jaxbBindingFile>${iepd.dir}/my-bindings.xjb</jaxbBindingFile>
-              </jaxbBindingFiles>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
+        <artifactId>java-bindings-reactor</artifactId>
+        <version>0.3-SNAPSHOT</version>
+    </parent>
 
 
-      <!-- using jaxb plugin to generate java classes from xsd files -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>jaxb2-maven-plugin</artifactId>
-        <version>2.2</version>
-        <executions>
-          <execution>
-            <id>xjc</id>
-            <goals><goal>xjc</goal></goals>
-          </execution>
-        </executions>
-        <configuration>
-          <verbose>true</verbose>
-          <noPackageLevelAnnotations>true</noPackageLevelAnnotations>
-          <clearOutputDir>true</clearOutputDir>
-          <sources>
-            <!-- Note: This directory is created by the prepare-iepd project, see that project for details -->
-            <source>src/main/xsd</source>
-          </sources>
-        </configuration>
-      </plugin>
+    <properties>
+        <!-- TODO: Update this file with the location of your IEPD, relative to this project. -->
+        <!--<iepd.dir>../iepd-source</iepd.dir>-->
+        <iepd.dir>../niem-3.2</iepd.dir>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>3.0.1</version>
-        <configuration>
-          <outputDirectory>${basedir}/../</outputDirectory>
-        </configuration>
-        <executions>
-          <execution>
-            <id>copy-sources</id>
-            <goals><goal>jar</goal></goals>
-          </execution>
-        </executions>
-      </plugin>
+    </properties>
 
-      <plugin>
-        <groupId>org.codehaus.gmaven</groupId>
-        <artifactId>groovy-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>Copy-JAXBHelper.java</id>
-            <phase>generate-sources</phase>
-            <goals><goal>execute</goal></goals>
-            <configuration>
-              <source>
-                import java.nio.file.Files
+    <build>
+        <plugins>
 
-                File outFile = new File(new File(basedir, "./src/main/java"), "./org/gtri/niem/JaxbHelper.java");
-                outFile.getParentFile().mkdirs();
-                File helperJavaFile = new File(basedir, "./src/config/JaxbHelper.java");
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.19.1</version>
+                <configuration>
+                    <argLine>-Xmx2048m -XX:MaxPermSize=256m</argLine>
+                </configuration>
+            </plugin>
 
-                if( outFile.exists() )
-                  outFile.delete();
+            <!-- Prepares this JAXB project from the IEPD directory. -->
+            <plugin>
+                <groupId>org.gtri.niem</groupId>
+                <artifactId>jaxb-config-maven-plugin</artifactId>
+                <version>1.0-SNAPSHOT</version>
 
-                Files.copy(helperJavaFile.canonicalFile.toPath(), outFile.canonicalFile.toPath());
-              </source>
-            </configuration>
-          </execution>
-          <execution>
-            <id>Generate-jaxb_config</id>
-            <phase>compile</phase>
-            <goals><goal>execute</goal></goals>
-            <configuration>
-              <source>
-              import java.util.regex.Pattern
-
-              log.info("Generating jaxb_config.properties file...");
-
-              List javaFiles = []
-              List packagePaths = []
-              File jaxbGenSrcDir = new File(basedir, "./target/generated-sources/jaxb");
-              jaxbGenSrcDir.eachFileRecurse(groovy.io.FileType.FILES) { file ->
-                if (file.getName().equalsIgnoreCase("ObjectFactory.java")) {
-                  File containingDir = file.getParentFile();
-                  String packagePath = containingDir.canonicalPath.replace(jaxbGenSrcDir.canonicalPath + File.separator, "");
-                  packagePath = packagePath.replace(File.separator, ".");
-                  packagePaths.add(packagePath);
-                }
-                if (file.getName().toLowerCase().endsWith(".java"))
-                  javaFiles.add(file);
-              }
-
-              File jaxbPropertiesFile = new File(basedir, "./target/classes/org/gtri/niem/jaxb_config.properties");
-              if (!jaxbPropertiesFile.getParentFile().exists()) {
-                jaxbPropertiesFile.getParentFile().mkdirs();
-              }
-              jaxbPropertiesFile.withPrintWriter { writer ->
-                writer.println "#\n# This file was auto-generated by the GTRI JAXB Config Plugin, " + Calendar.getInstance().getTime() + "\n#\n"
-
-                writer.println '# Contains a list of all the JAXB related packages generated in this project.  Useful for creating a JAXBContext object.'
-                writer.println "#   Only those directories which contained an ObjectFactory.java are included in this list."
-                writer.println "jaxb.package.count=${packagePaths.size()}\n"
-
-                for (int i = 0; i &lt; packagePaths.size(); i++) {
-                  String pName = packagePaths.get(i);
-                  writer.println "jaxb.package.${i}=${pName}"
-                }
-                writer.println "\n\n"
+                <executions>
+                    <execution>
+                        <id>Build JAXB Config</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>jaxbGenerateConfig</goal>
+                        </goals>
+                        <configuration>
+                            <iepdDirPath>${iepd.dir}</iepdDirPath>
+                            <overwritePluginOutput>true</overwritePluginOutput>
+                            <outputPath>./src/main</outputPath>
+                            <instanceXmlPaths>
+                                <instanceXmlPath>./src/test/resources/xml</instanceXmlPath>
+                            </instanceXmlPaths>
+                            <jaxbBindingFiles>
+                                <!-- TODO: Have binding files?  Add them here -->
+                                <jaxbBindingFile>${iepd.dir}/my-bindings.xjb</jaxbBindingFile>
+                            </jaxbBindingFiles>
+                        </configuration>
+                    </execution>
 
 
-                writer.println "# Number of java files that were created (and live in the gen sources dir)"
-                writer.println "java.file.count=${javaFiles.size()}\n"
+                    <execution>
+                        <id>generate-jaxbhelper-file</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>jaxb-copy-helper</goal>
+                        </goals>
+                    </execution>
 
-                writer.println "# Now we enumerate each java file as something you can read with Class.newInstance()"
-                for (int i = 0; i &lt; javaFiles.size(); i++) {
-                  File f = javaFiles.get(i);
-                  String javaFQCN = f.canonicalPath.replace(jaxbGenSrcDir.canonicalPath + File.separator, "");
-                  javaFQCN = javaFQCN.substring(0, javaFQCN.length() - ".java".length())
-                  javaFQCN = javaFQCN.replaceAll(Pattern.quote(File.separator), ".");
-                  writer.println "java.file.${i}=${javaFQCN}"
-                }
-                writer.println ""
-              }
-              </source>
-            </configuration>
-          </execution>
-          <execution>
-            <id>Copy-jar</id>
-            <phase>install</phase>
-            <goals><goal>execute</goal></goals>
-            <configuration>
-              <source>
-                import java.nio.file.Files
+                    <execution>
+                        <id>generate-jaxbproperties-file</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>jaxb-generate-properties</goal>
+                        </goals>
+                    </execution>
 
-                File jarfile = new File(basedir, "./target/${project.build.finalName}.jar");
-                File bindingsJar = new File(basedir, "../${project.build.finalName}.jar");
-                if( bindingsJar.exists() )
-                    bindingsJar.delete();
+                </executions>
 
-                Files.copy(jarfile.canonicalFile.toPath(), bindingsJar.canonicalFile.toPath());
-              </source>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-    </plugins>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.groovy</groupId>
+                        <artifactId>groovy-all</artifactId>
+                        <version>2.4.0</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
 
 
-  </build>
+            <!-- using jaxb plugin to generate java classes from xsd files -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <version>2.2</version>
+                <executions>
+                    <execution>
+                        <id>xjc</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <verbose>true</verbose>
+                    <noPackageLevelAnnotations>true</noPackageLevelAnnotations>
+                    <clearOutputDir>true</clearOutputDir>
+                    <sources>
+                        <!-- Note: This directory is created by the prepare-iepd project, see that project for details -->
+                        <source>src/main/xsd</source>
+                    </sources>
+                </configuration>
+            </plugin>
 
-  <dependencies>
-    <!-- JAXB should be included in the standard Java distribution -->
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-source-plugin</artifactId>-->
+                <!--<version>3.0.1</version>-->
+                <!--<configuration>-->
+                    <!--<outputDirectory>${basedir}/../</outputDirectory>-->
+                <!--</configuration>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>copy-sources</id>-->
+                        <!--<goals>-->
+                            <!--<goal>jar</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
 
-    <!-- Test Dependencies -->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.11</version>
-      <scope>test</scope>
-    </dependency>
-
-    <!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest-all -->
-    <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest-all</artifactId>
-      <version>1.3</version>
-      <scope>test</scope>
-    </dependency>
-
-    <!-- https://mvnrepository.com/artifact/io.github.benas/random-beans -->
-    <dependency>
-      <groupId>io.github.benas</groupId>
-      <artifactId>random-beans</artifactId>
-      <version>3.2.0</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>xml-randomizer</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <!-- Parses java 1.8 code to find problems in the generated sources -->
-    <dependency>
-      <groupId>com.github.javaparser</groupId>
-      <artifactId>javaparser-core</artifactId>
-      <version>2.5.1</version>
-      <scope>test</scope>
-    </dependency>
+        </plugins>
 
 
-  </dependencies>
+    </build>
+
+    <dependencies>
+        <!-- JAXB should be included in the standard Java distribution -->
+
+        <!-- Test Dependencies -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest-all -->
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+            <version>1.3</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/io.github.benas/random-beans -->
+        <dependency>
+            <groupId>io.github.benas</groupId>
+            <artifactId>random-beans</artifactId>
+            <version>3.2.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>xml-randomizer</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Parses java 1.8 code to find problems in the generated sources -->
+        <dependency>
+            <groupId>com.github.javaparser</groupId>
+            <artifactId>javaparser-core</artifactId>
+            <version>2.5.1</version>
+            <scope>test</scope>
+        </dependency>
+
+
+    </dependencies>
 
 </project>

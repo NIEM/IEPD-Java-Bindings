@@ -7,6 +7,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 
 
 public class Main {
@@ -23,7 +24,17 @@ public class Main {
         logger.info("Starting the Grizzly server...");
         // create a resource config that scans for JAX-RS resources and providers
         // in com.example package
-        final ResourceConfig rc = new ResourceConfig().packages("org.gtri.niem.rest");
+        String[] packages = null;
+        try{
+            packages = RestServices.readServicePackages();
+        }catch(Throwable t){
+            throw new RuntimeException("Cannot read service packages!", t);
+        }
+
+        ResourceConfig rc = new ResourceConfig().packages(packages);
+
+        rc.register(DebugExceptionMapper.class);
+        rc.register(ResponseResolver.class);
 
         // create and start a new instance of grizzly http server
         // exposing the Jersey application at BASE_URI

@@ -16,6 +16,9 @@
         version="2.1">
 
 
-    <jaxb:globalBindings typesafeEnumMaxMembers="1000"/>
+    <jaxb:globalBindings typesafeEnumMaxMembers="1000">
+        <xjc:javaType name="java.lang.String" xmlType="xs:IDREF" adapter="org.gtri.niem.IDREF_Adapter" />
+        <xjc:javaType name="org.gtri.niem.ListOfString" xmlType="xs:IDREFS" adapter="org.gtri.niem.IDREFS_Adapter" />
+    </jaxb:globalBindings>
 
 </jaxb:bindings>

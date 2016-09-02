@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<template:TemplateExchange 
+    xmlns:structures="http://release.niem.gov/niem/structures/3.0/" 
+    xmlns:nc="http://release.niem.gov/niem/niem-core/3.0/" 
+    xmlns="http://example.com/template/1.0/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:template="http://example.com/template/1.0/">
+  <nc:DateTime>2014-11-01T16:49:25.031-04:00</nc:DateTime>
+  <nc:WeaponUsageText structures:id="ABC">Test</nc:WeaponUsageText>
+  <nc:WeaponUsageText structures:ref="ABC" xsi:nil="true" />
+</template:TemplateExchange>
