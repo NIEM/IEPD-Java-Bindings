@@ -4,6 +4,10 @@ import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
+import com.github.javaparser.ast.type.ClassOrInterfaceType;
+import com.github.javaparser.ast.type.PrimitiveType;
+import com.github.javaparser.ast.type.ReferenceType;
+import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
@@ -12,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.io.File;
+import java.lang.ref.Reference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -76,7 +81,6 @@ public class TestJaxbGeneratedJava extends AbstractTest {
 
     }//end testNoRestProperty
 
-
     static class FieldDeclarationVisitor extends VoidVisitorAdapter {
 
         private static final Logger logger = Logger.getLogger(FieldDeclarationVisitor.class);
@@ -95,9 +99,33 @@ public class TestJaxbGeneratedJava extends AbstractTest {
             if( name.equalsIgnoreCase("rest") ){
                 Assert.fail("Class contains a 'rest' property, indicating a name conflict among other things");
             }
+
+            Type type = fieldDeclaration.getType();
+            recursivelyAnalyzeType(name, type);
+
             super.visit(fieldDeclaration, arg);
         }
 
+
+        private void recursivelyAnalyzeType(String name, Type type){
+            if( type instanceof ClassOrInterfaceType) {
+                ClassOrInterfaceType coit = (ClassOrInterfaceType) type;
+                logger.info("Found type: "+coit.getName());
+                if( coit.getTypeArgs() != null && !coit.getTypeArgs().isEmpty() ) {
+                    logger.info("    with Type args: " + coit.getTypeArgs());
+                }
+
+
+            }else if( type instanceof PrimitiveType ) {
+                logger.info("Found primitive: "+type);
+
+            }else if( type instanceof ReferenceType ){
+                ReferenceType rt = (ReferenceType) type;
+                recursivelyAnalyzeType(name, rt.getType());
+            }else{
+                Assert.fail("Encountered unknown type["+type.getClass().getName()+"] for property: "+name+"!");
+            }
+        }
     }
 
 
