@@ -6,7 +6,7 @@ This project is meant to be an **example** of how one may go about creating a JA
 a NIEM based exchange.  While we have attempted to accommodate all sorts of NIEM-based schema idioms, please understand that
 not all schema models will translate into perfect Java beans.
 
-[![Build Status](https://travis-ci.org/jtmrice/IEPD-Java-Bindings.svg?branch=master)](https://travis-ci.org/jtmrice/IEPD-Java-Bindings)
+[![Build Status](https://travis-ci.org/NIEM/IEPD-Java-Bindings.svg?branch=master)](https://travis-ci.org/NIEM/IEPD-Java-Bindings)
 
 ### Usage
 * Update schema files with IEPD schemas here: `${basedir}/iepd-source/`
