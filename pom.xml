@@ -20,9 +20,6 @@
 
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
         <timestamp>${maven.build.timestamp}</timestamp>
-
-        <groovyVersion>2.2.1</groovyVersion>
-
     </properties>
 
     <dependencies>
